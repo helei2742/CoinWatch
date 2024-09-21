@@ -1,0 +1,966 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2993E5072C9EDA3200E2BD22 /* CoinWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2993E5062C9EDA3200E2BD22 /* CoinWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2993E4F12C9EDA3200E2BD22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2993E4D82C9EDA3000E2BD22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2993E4DF2C9EDA3000E2BD22;
+			remoteInfo = CoinWatch;
+		};
+		2993E4FB2C9EDA3200E2BD22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2993E4D82C9EDA3000E2BD22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2993E4DF2C9EDA3000E2BD22;
+			remoteInfo = CoinWatch;
+		};
+		2993E5082C9EDA3200E2BD22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2993E4D82C9EDA3000E2BD22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2993E5052C9EDA3200E2BD22;
+			remoteInfo = "CoinWatch Watch App";
+		};
+		2993E5192C9EDA3300E2BD22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2993E4D82C9EDA3000E2BD22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2993E5052C9EDA3200E2BD22;
+			remoteInfo = "CoinWatch Watch App";
+		};
+		2993E5232C9EDA3300E2BD22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2993E4D82C9EDA3000E2BD22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2993E5052C9EDA3200E2BD22;
+			remoteInfo = "CoinWatch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2993E52F2C9EDA3300E2BD22 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				2993E5072C9EDA3200E2BD22 /* CoinWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2993E4E02C9EDA3000E2BD22 /* CoinWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoinWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2993E4F02C9EDA3200E2BD22 /* CoinWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoinWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2993E4FA2C9EDA3200E2BD22 /* CoinWatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoinWatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2993E5062C9EDA3200E2BD22 /* CoinWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CoinWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2993E5182C9EDA3300E2BD22 /* CoinWatch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoinWatch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2993E5222C9EDA3300E2BD22 /* CoinWatch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoinWatch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2993E4E22C9EDA3000E2BD22 /* CoinWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CoinWatch;
+			sourceTree = "<group>";
+		};
+		2993E4F32C9EDA3200E2BD22 /* CoinWatchTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CoinWatchTests;
+			sourceTree = "<group>";
+		};
+		2993E4FD2C9EDA3200E2BD22 /* CoinWatchUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CoinWatchUITests;
+			sourceTree = "<group>";
+		};
+		2993E50A2C9EDA3200E2BD22 /* CoinWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "CoinWatch Watch App";
+			sourceTree = "<group>";
+		};
+		2993E51B2C9EDA3300E2BD22 /* CoinWatch Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "CoinWatch Watch AppTests";
+			sourceTree = "<group>";
+		};
+		2993E5252C9EDA3300E2BD22 /* CoinWatch Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "CoinWatch Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2993E4DD2C9EDA3000E2BD22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E4ED2C9EDA3200E2BD22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E4F72C9EDA3200E2BD22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5032C9EDA3200E2BD22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5152C9EDA3300E2BD22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E51F2C9EDA3300E2BD22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2993E4D72C9EDA3000E2BD22 = {
+			isa = PBXGroup;
+			children = (
+				2993E4E22C9EDA3000E2BD22 /* CoinWatch */,
+				2993E4F32C9EDA3200E2BD22 /* CoinWatchTests */,
+				2993E4FD2C9EDA3200E2BD22 /* CoinWatchUITests */,
+				2993E50A2C9EDA3200E2BD22 /* CoinWatch Watch App */,
+				2993E51B2C9EDA3300E2BD22 /* CoinWatch Watch AppTests */,
+				2993E5252C9EDA3300E2BD22 /* CoinWatch Watch AppUITests */,
+				2993E4E12C9EDA3000E2BD22 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2993E4E12C9EDA3000E2BD22 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2993E4E02C9EDA3000E2BD22 /* CoinWatch.app */,
+				2993E4F02C9EDA3200E2BD22 /* CoinWatchTests.xctest */,
+				2993E4FA2C9EDA3200E2BD22 /* CoinWatchUITests.xctest */,
+				2993E5062C9EDA3200E2BD22 /* CoinWatch Watch App.app */,
+				2993E5182C9EDA3300E2BD22 /* CoinWatch Watch AppTests.xctest */,
+				2993E5222C9EDA3300E2BD22 /* CoinWatch Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2993E4DF2C9EDA3000E2BD22 /* CoinWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2993E5302C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch" */;
+			buildPhases = (
+				2993E4DC2C9EDA3000E2BD22 /* Sources */,
+				2993E4DD2C9EDA3000E2BD22 /* Frameworks */,
+				2993E4DE2C9EDA3000E2BD22 /* Resources */,
+				2993E52F2C9EDA3300E2BD22 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2993E5092C9EDA3200E2BD22 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2993E4E22C9EDA3000E2BD22 /* CoinWatch */,
+			);
+			name = CoinWatch;
+			packageProductDependencies = (
+			);
+			productName = CoinWatch;
+			productReference = 2993E4E02C9EDA3000E2BD22 /* CoinWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2993E4EF2C9EDA3200E2BD22 /* CoinWatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2993E5332C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatchTests" */;
+			buildPhases = (
+				2993E4EC2C9EDA3200E2BD22 /* Sources */,
+				2993E4ED2C9EDA3200E2BD22 /* Frameworks */,
+				2993E4EE2C9EDA3200E2BD22 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2993E4F22C9EDA3200E2BD22 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2993E4F32C9EDA3200E2BD22 /* CoinWatchTests */,
+			);
+			name = CoinWatchTests;
+			packageProductDependencies = (
+			);
+			productName = CoinWatchTests;
+			productReference = 2993E4F02C9EDA3200E2BD22 /* CoinWatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2993E4F92C9EDA3200E2BD22 /* CoinWatchUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2993E5362C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatchUITests" */;
+			buildPhases = (
+				2993E4F62C9EDA3200E2BD22 /* Sources */,
+				2993E4F72C9EDA3200E2BD22 /* Frameworks */,
+				2993E4F82C9EDA3200E2BD22 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2993E4FC2C9EDA3200E2BD22 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2993E4FD2C9EDA3200E2BD22 /* CoinWatchUITests */,
+			);
+			name = CoinWatchUITests;
+			packageProductDependencies = (
+			);
+			productName = CoinWatchUITests;
+			productReference = 2993E4FA2C9EDA3200E2BD22 /* CoinWatchUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		2993E5052C9EDA3200E2BD22 /* CoinWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2993E52C2C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch Watch App" */;
+			buildPhases = (
+				2993E5022C9EDA3200E2BD22 /* Sources */,
+				2993E5032C9EDA3200E2BD22 /* Frameworks */,
+				2993E5042C9EDA3200E2BD22 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2993E50A2C9EDA3200E2BD22 /* CoinWatch Watch App */,
+			);
+			name = "CoinWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "CoinWatch Watch App";
+			productReference = 2993E5062C9EDA3200E2BD22 /* CoinWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2993E5172C9EDA3300E2BD22 /* CoinWatch Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2993E5392C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch Watch AppTests" */;
+			buildPhases = (
+				2993E5142C9EDA3300E2BD22 /* Sources */,
+				2993E5152C9EDA3300E2BD22 /* Frameworks */,
+				2993E5162C9EDA3300E2BD22 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2993E51A2C9EDA3300E2BD22 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2993E51B2C9EDA3300E2BD22 /* CoinWatch Watch AppTests */,
+			);
+			name = "CoinWatch Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "CoinWatch Watch AppTests";
+			productReference = 2993E5182C9EDA3300E2BD22 /* CoinWatch Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2993E5212C9EDA3300E2BD22 /* CoinWatch Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2993E53C2C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch Watch AppUITests" */;
+			buildPhases = (
+				2993E51E2C9EDA3300E2BD22 /* Sources */,
+				2993E51F2C9EDA3300E2BD22 /* Frameworks */,
+				2993E5202C9EDA3300E2BD22 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2993E5242C9EDA3300E2BD22 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2993E5252C9EDA3300E2BD22 /* CoinWatch Watch AppUITests */,
+			);
+			name = "CoinWatch Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "CoinWatch Watch AppUITests";
+			productReference = 2993E5222C9EDA3300E2BD22 /* CoinWatch Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2993E4D82C9EDA3000E2BD22 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					2993E4DF2C9EDA3000E2BD22 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					2993E4EF2C9EDA3200E2BD22 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 2993E4DF2C9EDA3000E2BD22;
+					};
+					2993E4F92C9EDA3200E2BD22 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 2993E4DF2C9EDA3000E2BD22;
+					};
+					2993E5052C9EDA3200E2BD22 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					2993E5172C9EDA3300E2BD22 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 2993E5052C9EDA3200E2BD22;
+					};
+					2993E5212C9EDA3300E2BD22 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 2993E5052C9EDA3200E2BD22;
+					};
+				};
+			};
+			buildConfigurationList = 2993E4DB2C9EDA3000E2BD22 /* Build configuration list for PBXProject "CoinWatch" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2993E4D72C9EDA3000E2BD22;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2993E4E12C9EDA3000E2BD22 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2993E4DF2C9EDA3000E2BD22 /* CoinWatch */,
+				2993E4EF2C9EDA3200E2BD22 /* CoinWatchTests */,
+				2993E4F92C9EDA3200E2BD22 /* CoinWatchUITests */,
+				2993E5052C9EDA3200E2BD22 /* CoinWatch Watch App */,
+				2993E5172C9EDA3300E2BD22 /* CoinWatch Watch AppTests */,
+				2993E5212C9EDA3300E2BD22 /* CoinWatch Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2993E4DE2C9EDA3000E2BD22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E4EE2C9EDA3200E2BD22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E4F82C9EDA3200E2BD22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5042C9EDA3200E2BD22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5162C9EDA3300E2BD22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5202C9EDA3300E2BD22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2993E4DC2C9EDA3000E2BD22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E4EC2C9EDA3200E2BD22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E4F62C9EDA3200E2BD22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5022C9EDA3200E2BD22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E5142C9EDA3300E2BD22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2993E51E2C9EDA3300E2BD22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2993E4F22C9EDA3200E2BD22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2993E4DF2C9EDA3000E2BD22 /* CoinWatch */;
+			targetProxy = 2993E4F12C9EDA3200E2BD22 /* PBXContainerItemProxy */;
+		};
+		2993E4FC2C9EDA3200E2BD22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2993E4DF2C9EDA3000E2BD22 /* CoinWatch */;
+			targetProxy = 2993E4FB2C9EDA3200E2BD22 /* PBXContainerItemProxy */;
+		};
+		2993E5092C9EDA3200E2BD22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2993E5052C9EDA3200E2BD22 /* CoinWatch Watch App */;
+			targetProxy = 2993E5082C9EDA3200E2BD22 /* PBXContainerItemProxy */;
+		};
+		2993E51A2C9EDA3300E2BD22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2993E5052C9EDA3200E2BD22 /* CoinWatch Watch App */;
+			targetProxy = 2993E5192C9EDA3300E2BD22 /* PBXContainerItemProxy */;
+		};
+		2993E5242C9EDA3300E2BD22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2993E5052C9EDA3200E2BD22 /* CoinWatch Watch App */;
+			targetProxy = 2993E5232C9EDA3300E2BD22 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2993E52A2C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2993E52B2C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		2993E52D2C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"CoinWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CoinWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.helei.CoinWatch;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		2993E52E2C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"CoinWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CoinWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.helei.CoinWatch;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		2993E5312C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"CoinWatch/Preview Content\"";
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CoinWatch;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2993E5322C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"CoinWatch/Preview Content\"";
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CoinWatch;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2993E5342C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoinWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CoinWatch";
+			};
+			name = Debug;
+		};
+		2993E5352C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoinWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CoinWatch";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2993E5372C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatchUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CoinWatch;
+			};
+			name = Debug;
+		};
+		2993E5382C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.helei.CoinWatchUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CoinWatch;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2993E53A2C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.helei.CoinWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoinWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CoinWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		2993E53B2C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.helei.CoinWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoinWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CoinWatch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		2993E53D2C9EDA3300E2BD22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.helei.CoinWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "CoinWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		2993E53E2C9EDA3300E2BD22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5384RBW2M6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.helei.CoinWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "CoinWatch Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2993E4DB2C9EDA3000E2BD22 /* Build configuration list for PBXProject "CoinWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E52A2C9EDA3300E2BD22 /* Debug */,
+				2993E52B2C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2993E52C2C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E52D2C9EDA3300E2BD22 /* Debug */,
+				2993E52E2C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2993E5302C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E5312C9EDA3300E2BD22 /* Debug */,
+				2993E5322C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2993E5332C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E5342C9EDA3300E2BD22 /* Debug */,
+				2993E5352C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2993E5362C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatchUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E5372C9EDA3300E2BD22 /* Debug */,
+				2993E5382C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2993E5392C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E53A2C9EDA3300E2BD22 /* Debug */,
+				2993E53B2C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2993E53C2C9EDA3300E2BD22 /* Build configuration list for PBXNativeTarget "CoinWatch Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2993E53D2C9EDA3300E2BD22 /* Debug */,
+				2993E53E2C9EDA3300E2BD22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2993E4D82C9EDA3000E2BD22 /* Project object */;
+}

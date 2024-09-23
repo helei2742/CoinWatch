@@ -10,6 +10,7 @@
 		2993E5072C9EDA3200E2BD22 /* CoinWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2993E5062C9EDA3200E2BD22 /* CoinWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2993E6352C9EDB9E00E2BD22 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 2993E6342C9EDB9E00E2BD22 /* Kingfisher */; };
 		2993E6382C9EDC2000E2BD22 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2993E6372C9EDC2000E2BD22 /* KeychainSwift */; };
+		29EB0D042CA1979C00D810B1 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 29EB0D032CA1979C00D810B1 /* SwiftyJSON */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2993E6382C9EDC2000E2BD22 /* KeychainSwift in Frameworks */,
+				29EB0D042CA1979C00D810B1 /* SwiftyJSON in Frameworks */,
 				2993E6352C9EDB9E00E2BD22 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,6 +274,7 @@
 			packageProductDependencies = (
 				2993E6342C9EDB9E00E2BD22 /* Kingfisher */,
 				2993E6372C9EDC2000E2BD22 /* KeychainSwift */,
+				29EB0D032CA1979C00D810B1 /* SwiftyJSON */,
 			);
 			productName = "CoinWatch Watch App";
 			productReference = 2993E5062C9EDA3200E2BD22 /* CoinWatch Watch App.app */;
@@ -369,6 +372,7 @@
 			packageReferences = (
 				2993E6332C9EDB9E00E2BD22 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				2993E6362C9EDC2000E2BD22 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				29EB0D022CA1979C00D810B1 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2993E4E12C9EDA3000E2BD22 /* Products */;
@@ -557,6 +561,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -989,6 +994,14 @@
 				minimumVersion = 24.0.0;
 			};
 		};
+		29EB0D022CA1979C00D810B1 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1001,6 +1014,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2993E6362C9EDC2000E2BD22 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		29EB0D032CA1979C00D810B1 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29EB0D022CA1979C00D810B1 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

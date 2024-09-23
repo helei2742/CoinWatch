@@ -8,6 +8,18 @@
 import Foundation
 import SwiftUI
 
+
+extension String {
+    func substring(to index: Int) -> String? {
+        guard index >= 0 && index <= self.count else {
+            return nil // 确保索引在有效范围内
+        }
+        
+        let endIndex = self.index(self.startIndex, offsetBy: index)
+        return String(self[self.startIndex..<endIndex])
+    }
+}
+
 class CommonUtil {
     
     static func generalCoinPrintSymbol(base: String, quote: String) -> String{
@@ -15,9 +27,6 @@ class CommonUtil {
         return base
     }
     
-    static func generalCoinPrintSymbol(spotInfo: SpotInfo) -> String{
-        return generalCoinPrintSymbol(base: spotInfo.baseAssert, quote: spotInfo.quoteAssert)
-    }
     
     static func getCoinLogoImageUrl(base: String) -> String {
         //return URL(string: SystemConfig.COIN_LOGO_BASE_URL + "/" + base + ".png")!

@@ -6,7 +6,8 @@
 //
 
 import Foundation
-
+import SwiftUI
+import SwiftyJSON
 
 class AccountGeneralModelData: ObservableObject{
     static let sharedInstance = AccountGeneralModelData()
@@ -37,12 +38,14 @@ class AccountGeneralModelData: ObservableObject{
         AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-10 11:11:11"), spotTotalValue: 3213),
         AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-09 11:11:11"), spotTotalValue: 3000.0)
     ]
-    
-    var spotList: [SpotInfo] = [
-        SpotInfo(baseAssert: "BTC"), SpotInfo(baseAssert: "ETH"),
-        SpotInfo(baseAssert: "DOGE"), SpotInfo(baseAssert: "SOL")
-    ]
-//
+
+
+    @State var accountSpot:[AccountSpotItem]
+    // var spotList: [SpotInfo] = [
+    //     SpotInfo(baseAssert: "BTC"), SpotInfo(baseAssert: "ETH"),
+    //     SpotInfo(baseAssert: "DOGE"), SpotInfo(baseAssert: "SOL")
+    // ]
+
     private init() {
             // 初始化代码
         spotTotalValue = 11820.89
@@ -50,6 +53,8 @@ class AccountGeneralModelData: ObservableObject{
         
         contractTotalValue = 0.0
         contractUnit = .USDT
+        
+        accountSpot = []
     }
     
     
@@ -58,11 +63,70 @@ class AccountGeneralModelData: ObservableObject{
 class AccountSpotDayInfo: ObservableObject {
     var date: Date
     
+    var snapshotVos: JSON
+
     @Published var spotTotalValue: Double//现货资产总价值
     
-    init(date: Date?, spotTotalValue: Double?) {
-        self.date = date ?? Date()
-        
-        self.spotTotalValue = spotTotalValue ?? 0.0
+    init(date: Date, snapshotVos: JSON? = nil, spotTotalValue: Double) {
+        self.date = date
+        self.snapshotVos = snapshotVos ?? JSON()
+        self.spotTotalValue = spotTotalValue
     }
 }
+
+//@Observable
+class AccountSpotItem: Identifiable{
+    static private var nextId = 0
+    
+    var baseAsset: String   // 现货名 如 BTC/USDT
+    var quoteAsset: String  // 计算单位 如 BTC/USDT
+    
+    private var internalCount: Double = 0
+    var count: Double {
+        set {
+            self.lastCount = count
+            internalCount = newValue
+        }
+        
+        get {
+            return internalCount
+        }
+    }
+    var lastCount: Double //上一次的个数
+
+    private var internalAssetValue: Double = 0
+    var assetValue: Double {
+        set {
+            self.lastAssetValue = assetValue
+            internalAssetValue = newValue
+        }
+        get {
+            if let spotInfo = SpotInfo.sharedInstance.findSpotInfo(base: baseAsset, quote: quoteAsset) {
+                return spotInfo.price  * count
+            }
+            
+            return 0
+        }
+    }
+     var lastAssetValue: Double //上一次的资产价值
+
+     var newPrise: Double   //最新价格，相对于 计算单位
+     var lastNewPrise: Double  //上一次的最新价格
+    
+    init(baseAsset: String,
+         quoteAsset: String,
+         count: Double
+    ) {
+        self.baseAsset = baseAsset
+        self.quoteAsset = quoteAsset
+        
+        self.internalCount = count
+        self.lastCount = count
+        
+        self.lastAssetValue = 0.0
+        
+        self.newPrise = 0
+        self.lastNewPrise = 0
+    }
+}
+

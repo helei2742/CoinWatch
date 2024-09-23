@@ -13,8 +13,15 @@ class DateUtil {
     static let inner: Inner = Inner(pattern: "yyyy-MM-dd HH:mm:ss")
     
     
-    static func strToDate(str:String) -> Date? {
-        return inner.strToDate(str: str)
+    static func strToDate(str:String) -> Date {
+        return inner.strToDate(str: str) ?? Date()
+    }
+    
+    static func dateToDay(date: Date) -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+
+        return calendar.date(from: components)!
     }
     
     static func areDatesOnSameDay(_ date1: Date, _ date2: Date) -> Bool {

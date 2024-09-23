@@ -6,42 +6,61 @@
 //
 
 import SwiftUI
-import os.lock
+import SwiftyJSON
 
+class SpotInfo {
+    static let sharedInstance = SpotInfo(
+        spotInfoList: [],
+        coinTradingDayInfo: CoinTradingDayInfo()
+    )
+    
+    
+    @State var spotInfoList: [SpotInfoItem]?
 
-class SpotInfo: Identifiable, ObservableObject {
-    static private var nextId = 0
-    static private var lock = os_unfair_lock_s()
+    var coinTradingDayInfo: CoinTradingDayInfo
     
-    @Published var id: Int
-    var baseAssert: String   // 现货名 如 BTC/USDT
-    var quoteAssert: String  // 计算单位 如 BTC/USDT
+    init(spotInfoList: [SpotInfoItem], coinTradingDayInfo: CoinTradingDayInfo) {
+        self.spotInfoList = spotInfoList
+        self.coinTradingDayInfo = coinTradingDayInfo
+    }
+
+    func findSpotInfo(base: String, quote: String) -> SpotInfoItem? {
+        return spotInfoList?.first(where: { (spotInfoItem) -> Bool in
+                        spotInfoItem.base == base && spotInfoItem.quote == quote
+                    })
+    }
+    
+    func findSpotInfo(symbol: String) -> SpotInfoItem? {
+        return spotInfoList?.first(where: { (spotInfoItem) -> Bool in
+                        symbol == spotInfoItem.base + spotInfoItem.quote
+                    })
+    }
     
     
-    @Published var assertValue: Double //资产价值，相对于 计算单位
-    @Published var lastAssertValue: Double
-    
-    @Published var newPrise: Double   //最新价格，相对于 计算单位
-    @Published var lastNewPrise: Double
-    
-    init(baseAssert:String?="BTC",
-         quoteAssert:String?="USDT",
-         assertValue: Double?=0.0,
-         newPrise: Double?=0.0
-    ) {
-        
-        self.baseAssert = baseAssert ?? "BTC"
-        self.quoteAssert = quoteAssert ?? "USDT"
-        
-        self.assertValue = assertValue ?? 1.0
-        self.lastAssertValue = assertValue ?? 0.0
-        
-        self.newPrise = newPrise ?? 1.0
-        self.lastNewPrise = newPrise ?? 1.0
-        
-        os_unfair_lock_lock(&SpotInfo.lock)
-        self.id = SpotInfo.nextId
-        SpotInfo.nextId += 1
-        os_unfair_lock_unlock(&SpotInfo.lock)
+    func addCoinTradingDayInfo(date:Date, symbol: String, value: JSON) {
+        coinTradingDayInfo.dayKeyCache[DateUtil.dateToDay(date: date)]?[symbol] = value
+    }
+
+    func getCoinTradingDayInfo(date: Date, symbol: String) -> JSON? {
+        return coinTradingDayInfo.dayKeyCache[DateUtil.dateToDay(date: date)]?[symbol]
     }
 }
+
+class CoinTradingDayInfo {
+    var dayKeyCache: [Date: [String:JSON]] = [:]
+}
+
+//@Observable
+class SpotInfoItem {
+    var base: String
+    var quote: String
+    var price: Double
+    
+    init(base: String, quote: String, price: Double) {
+        self.base = base
+        self.quote = quote
+        self.price = price
+    }
+}
+
+

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct AssertCardNumberRaw: View {
-    @Binding var number: Double
-    @Binding var lastNumber: Double
+    var number: Double
+    var lastNumber: Double
     
     var title: String = "title"
     var quote: String = "USDT"

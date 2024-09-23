@@ -74,7 +74,7 @@ class AccountSpotDayInfo: ObservableObject {
     }
 }
 
-//@Observable
+@Observable
 class AccountSpotItem: Identifiable{
     static private var nextId = 0
     

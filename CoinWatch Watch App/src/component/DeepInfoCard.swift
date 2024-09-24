@@ -38,6 +38,8 @@ struct DeepInfoCard: View {
                         y: .value("美元", element.volume)
                     )
                     .foregroundStyle(chartColor())
+                    .symbol(ChartSymbolShape
+                    )
                     .symbolSize(8)
                     
                     LineMark(

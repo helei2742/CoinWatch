@@ -12,6 +12,12 @@ class DateUtil {
     
     static let inner: Inner = Inner(pattern: "yyyy-MM-dd HH:mm:ss")
     
+    static func dateToTimestarp(date: Date?) -> Int?  {
+        if let date = date {
+            return Int(date.timeIntervalSince1970 * 1000)
+        }
+        return nil
+    }
     
     static func strToDate(str:String) -> Date {
         return inner.strToDate(str: str) ?? Date()
@@ -21,11 +27,24 @@ class DateUtil {
         return inner.dayFormatter.string(from: date)
     }
     
-    static func calDate(from date: Date, days: Int) -> Date? {
+    static func calDate(from date: Date, days: Int, timeUnit: TimeUnit) -> Date? {
         // 使用当前日历对象来进行日期计算
         let calendar = Calendar.current
         // 通过 subtracting 天数来获取目标日期
-        return calendar.date(byAdding: .day, value: days, to: date)
+        switch timeUnit {
+        case .s:
+            return calendar.date(byAdding: .second, value: days, to: date)
+        case .m:
+            return calendar.date(byAdding: .minute, value: days, to: date)
+        case .h:
+            return calendar.date(byAdding: .hour, value: days, to: date)
+        case .d:
+            return calendar.date(byAdding: .day, value: days, to: date)
+        case .w:
+            return calendar.date(byAdding: .weekday, value: days, to: date)
+        case .M:
+            return calendar.date(byAdding: .month, value: days, to: date)
+        }
     }
     
     static func dateToDay(date: Date) -> Date {

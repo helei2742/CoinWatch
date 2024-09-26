@@ -11,7 +11,8 @@ import SwiftUI
 struct CoinWatch_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            KLineChart(symbol: "BTCUSDT", kLineInterval: .d_1)
+
         }
     }
 }

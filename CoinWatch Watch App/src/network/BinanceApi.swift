@@ -420,8 +420,8 @@ class SpotApi {
     func kLineData(
         symbol: String,
         interval: KLineInterval,
-        startTime: Int? = nil,
-        endTime: Int? = nil,
+        startTime: Date? = nil,
+        endTime: Date? = nil,
         timeZone: TimeZone? = .current,
         limit: Int? = 500,
         
@@ -435,8 +435,8 @@ class SpotApi {
             parameters: [
                 "symbol": symbol,
                 "interval": interval.rawValue.toString(),
-                "startTime": startTime,
-                "endTime": endTime,
+                "startTime": DateUtil.dateToTimestarp(date: startTime),
+                "endTime": DateUtil.dateToTimestarp(date: endTime),
                 "timeZone": (timeZone?.secondsFromGMT())! / 3600,
                 "limit": limit
             ],
@@ -444,4 +444,5 @@ class SpotApi {
             failure: failureCall
         )
     }
+    
 }

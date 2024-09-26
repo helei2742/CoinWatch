@@ -17,6 +17,17 @@ class DateUtil {
         return inner.strToDate(str: str) ?? Date()
     }
     
+    static func dateToStr(date: Date) -> String {
+        return inner.dayFormatter.string(from: date)
+    }
+    
+    static func calDate(from date: Date, days: Int) -> Date? {
+        // 使用当前日历对象来进行日期计算
+        let calendar = Calendar.current
+        // 通过 subtracting 天数来获取目标日期
+        return calendar.date(byAdding: .day, value: days, to: date)
+    }
+    
     static func dateToDay(date: Date) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)

@@ -7,46 +7,14 @@
 
 
 import Foundation
-//import Alamofire
+import Alamofire
 import SwiftyJSON
 import CryptoKit
 
 public class BinanceApiRequest {
-
-    
-    
-//    func binanceApiRequestSync(
-//        method: HTTPMethod = .get,
-//        path: String,
-//        ipWeight: Int,
-//        body: [String:Any]? = [:],
-//        parameters: [String: Any]? = nil,
-//        success : ((JSON) -> Void)? = nil,
-//        failure: ((BinanceAPIError) -> Void)? = nil
-//    ) -> Void{
-//        // let semaphone = DispatchSemaphore(value: 0)
-//        await binanceApiRequest(
-//            method:method,
-//            path: path,
-//            ipWeight: ipWeight,
-//            body: body,
-//            parameters: parameters,
-//            success : { data in
-//                if success != nil {
-//                    success!(data)
-//                }
-////                semaphone.signal()
-//            },
-//            failure: {error in
-//                failureasync(error)
-////                semaphone.signal()
-//            }
-//        )
-//        // _ = semaphone.wait(timeout: .distantFuture)
-//    }
     
     static func binanceApiRequest(
-//        method: HTTPMethod = .get,
+        method: HTTPMethod = .get,
         url: String,
         ipWeight: Int,
         body:[String:Any?]? = [:],
@@ -63,22 +31,24 @@ public class BinanceApiRequest {
 //        parameters!["recvWindow"] = 0
         
         let result  = signatureRequest(body: body, parameters: parameters)
+//        let result  = (queryString: "", signature: "")
         let queryString = result.queryString ?? ""
         let signature = result.signature ?? ""
+                
         
-//        request(
-//            method:method,
-//            url: url + "?" + queryString + "&signature=" + signature,
-//            body: body,
-//            parameters: parameters,
-//            successCall: success,
-//            failureCall: { error in
-//                if let failure = failure {
-//                    failure(error)
-//                }
-//            },
-//            isLoading: nil
-//        )
+        request(
+            method:method,
+            url: url + "?" + queryString + (signature.isEmpty ? "" : "&signature=" + signature),
+            body: body,
+            parameters: parameters,
+            successCall: success,
+            failureCall: { error in
+                if let failure = failure {
+                    failure(error)
+                }
+            },
+            isLoading: nil
+        )
     }    
     
     static func signatureRequest(
@@ -92,7 +62,9 @@ public class BinanceApiRequest {
         if let body = body { //body
             var str = ""
             for (key, value) in body {
-                str = str + "&\(key)=\(String(describing: value))"
+                if let value = value {
+                    str = str + "&\(key)=\(String(describing: value))"
+                }
             }
             if !str.isEmpty {
                 str.removeFirst()
@@ -103,7 +75,9 @@ public class BinanceApiRequest {
         if let parameters = parameters { //query
             var str = ""
             for (key, value) in parameters {
-                str = str + "&\(key)=\(String(describing: value))"
+                if let value = value {
+                    str = str + "&\(key)=\(String(describing: value))"
+                }
             }
             if !str.isEmpty {
                 str.removeFirst()
@@ -112,7 +86,8 @@ public class BinanceApiRequest {
             queryString = str
         }
         
-        return (hmacSHA256(message: sionedString, key: cryptoInfo!.secretKey), queryString)
+       // return (hmacSHA256(message: sionedString, key: cryptoInfo!.secretKey), queryString)
+        return ("", queryString)
     }
   
     
@@ -128,73 +103,71 @@ public class BinanceApiRequest {
         return hmac.map { String(format: "%02hhx", $0) }.joined()
     }
     
+
     
-//    static func request(method: HTTPMethod = .get,
-//                 url: String,
-//                 body:[String: Any?]? = nil,
-//                 parameters: [String: Any?]? = nil,
-//                 successCall : ((JSON) -> Void)? = nil,
-//                 failureCall: ((BinanceAPIError) -> Void)? = nil,
-//                 isLoading:Bool? = nil
-//    ) {
-//        
-//        if isLoading == true {
-//            
-//        }
-//        
-//        
-//        
-//        let headers:HTTPHeaders =  [
-//            "Content-Type":"application/json;charset=UTF-8",
-//            "Accept":"application/json"
-//        ]
-//        
-//        var nonNilBody:[String:Any] = [:]
-//        if let body = body {
-//            nonNilBody = body.compactMapValues { $0 }
-//        }
-//        
-//        AF.request(
-//            url,
-//            method: method,
-//            parameters: nonNilBody,
-//            encoding:JSONEncoding.default,
-//            headers: headers
-//        )
-//        .validate()
-//        .responseDecodable(of: Data.self) { res in
-//            switch res.result {
-//            case .success(let value) :
-//                let json = try? JSON(data: value)
-//                if successCall != nil {
-//                    successCall!(json!)
-//                }
-//            case .failure(let error):
-//                print(error)
-//                let eCode = res.response?.statusCode ?? 500
-//                var errorType = BinanceAPIError.ERROR_UNKNOW
-//                if eCode == 403 {
-//                    errorType = .ERROR_WAF
-//                } else if eCode == 409 {
-//                    errorType = .ERROR_CANCEL_REPLACE
-//                } else if eCode == 429 {
-//                    errorType = .ERROR_REQUEST_LIMIT
-//                } else if eCode/100 == 5 {
-//                    errorType = .ERROR_BINANCE_SERVER
-//                } else if eCode/100 == 4 {
-//                    errorType = BinanceAPIError.ERROR_REQUEST
-//                }
-//                if (failureCall != nil) {
-//                    failureCall!(errorType)
-//                }
-//            }
-//        }
-//    }
+    static func request(method: HTTPMethod = .get,
+                 url: String,
+                 body:[String: Any?]? = nil,
+                 parameters: [String: Any?]? = nil,
+                 successCall : ((JSON) -> Void)? = nil,
+                 failureCall: ((BinanceAPIError) -> Void)? = nil,
+                 isLoading:Bool? = nil
+    ) {
+        
+        if isLoading == true {
+            
+        }
+        
+        print(url)
+        
+        let headers:HTTPHeaders =  [
+            "Content-Type":"application/json;charset=UTF-8",
+            "Accept":"application/json"
+        ]
+        
+        var nonNilBody:[String:Any] = [:]
+        if let body = body {
+            nonNilBody = body.compactMapValues { $0 }
+        }
+        
+        AF.request(
+            url,
+            method: method,
+            parameters: nonNilBody.isEmpty ? nil : nonNilBody,
+            encoding:JSONEncoding.default,
+            headers: headers
+        )
+        .validate()
+        .responseData { res in
+            switch res.result {
+            case .success(let value) :
+                let json = try? JSON(data: value)
+                if successCall != nil {
+                    successCall!(json!)
+                }
+            case .failure(let error):
+                print(error)
+                let eCode = res.response?.statusCode ?? 500
+                var errorType = BinanceAPIError.ERROR_UNKNOW
+                if eCode == 403 {
+                    errorType = .ERROR_WAF
+                } else if eCode == 409 {
+                    errorType = .ERROR_CANCEL_REPLACE
+                } else if eCode == 429 {
+                    errorType = .ERROR_REQUEST_LIMIT
+                } else if eCode/100 == 5 {
+                    errorType = .ERROR_BINANCE_SERVER
+                } else if eCode/100 == 4 {
+                    errorType = BinanceAPIError.ERROR_REQUEST
+                }
+                if (failureCall != nil) {
+                    failureCall!(errorType)
+                }
+            }
+        }
+    }
 
 }
-
-
-
 
 
 

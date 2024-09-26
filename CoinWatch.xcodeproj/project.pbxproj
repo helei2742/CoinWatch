@@ -373,6 +373,7 @@
 				2993E6332C9EDB9E00E2BD22 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				2993E6362C9EDC2000E2BD22 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				29EB0D022CA1979C00D810B1 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				298151652CA4525400535380 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2993E4E12C9EDA3000E2BD22 /* Products */;
@@ -978,6 +979,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		298151652CA4525400535380 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 		2993E6332C9EDB9E00E2BD22 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";

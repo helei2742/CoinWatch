@@ -10,7 +10,7 @@ import SwiftyJSON
 
 class BinanceApi {
     
-    static var baseURL: BaseURL = BaseURL.NORMAL_API_1
+    static var baseURL: BaseURL = BaseURL.PUBLIC_DATA_API
     
     static var spotApi: SpotApi = SpotApi(baseURL)
     
@@ -63,29 +63,29 @@ class AccountApi {
      - endTime: 结束时间
      - Returns:
      {
-         "code":200, // 200表示返回正确，否则即为错误码
-         "msg":"", // 与错误码对应的报错信息
-         "snapshotVos":[
-             {
-                 "data":{
-                     "balances":[
-                         {
-                             "asset":"BTC",
-                             "free":"0.09905021",
-                             "locked":"0.00000000"
-                         },
-                         {
-                             "asset":"USDT",
-                             "free":"1.89109409",
-                             "locked":"0.00000000"
-                         }
-                     ],
-                     "totalAssetOfBtc":"0.09942700"
-                 },
-                 "type":"spot",
-                 "updateTime":1576281599000
-             }
-         ]
+     "code":200, // 200表示返回正确，否则即为错误码
+     "msg":"", // 与错误码对应的报错信息
+     "snapshotVos":[
+     {
+     "data":{
+     "balances":[
+     {
+     "asset":"BTC",
+     "free":"0.09905021",
+     "locked":"0.00000000"
+     },
+     {
+     "asset":"USDT",
+     "free":"1.89109409",
+     "locked":"0.00000000"
+     }
+     ],
+     "totalAssetOfBtc":"0.09942700"
+     },
+     "type":"spot",
+     "updateTime":1576281599000
+     }
+     ]
      }
      */
     func assertSnapshoot (
@@ -143,7 +143,7 @@ class AccountApi {
         successCall: @escaping (JSON) -> Void
     ) -> Void {
         BinanceApiRequest.binanceApiRequest(
-//            method: .post,
+            //            method: .post,
             url: baseUrl.rawValue + "/sapi/v3/asset/getUserAsset",
             ipWeight: 5,
             body: [
@@ -288,7 +288,7 @@ class SpotApi {
      */
     func coins24HourPriceStatus(
         symbols:[String],
-        type:APIResponseType = .FULL,
+        type:ApiResponseType = .FULL,
         successCall: @escaping (JSON) -> Void
     ) -> Void {
         
@@ -318,46 +318,46 @@ class SpotApi {
      - successCall: JSON -> Void 请求成功的回调，参数为返回的Json对象
      
      [
-         {
-             "symbol": "BTCUSDT",
-             "priceChange": "-83.13000000",
-             "priceChangePercent": "-0.317",
-             "weightedAvgPrice": "26234.58803036",
-             "openPrice": "26304.80000000",
-             "highPrice": "26397.46000000",
-             "lowPrice": "26088.34000000",
-             "lastPrice": "26221.67000000",
-             "volume": "18495.35066000",
-             "quoteVolume": "485217905.04210480",
-             "openTime": 1695686400000,
-             "closeTime": 1695772799999,
-             "firstId": 3220151555,
-             "lastId": 3220849281,
-             "count": 697727
-         },
-         {
-             "symbol": "BNBUSDT",
-             "priceChange": "2.60000000",
-             "priceChangePercent": "1.238",
-             "weightedAvgPrice": "211.92276958",
-             "openPrice": "210.00000000",
-             "highPrice": "213.70000000",
-             "lowPrice": "209.70000000",
-             "lastPrice": "212.60000000",
-             "volume": "280709.58900000",
-             "quoteVolume": "59488753.54750000",
-             "openTime": 1695686400000,
-             "closeTime": 1695772799999,
-             "firstId": 672397461,
-             "lastId": 672496158,
-             "count": 98698
-         }
+     {
+     "symbol": "BTCUSDT",
+     "priceChange": "-83.13000000",
+     "priceChangePercent": "-0.317",
+     "weightedAvgPrice": "26234.58803036",
+     "openPrice": "26304.80000000",
+     "highPrice": "26397.46000000",
+     "lowPrice": "26088.34000000",
+     "lastPrice": "26221.67000000",
+     "volume": "18495.35066000",
+     "quoteVolume": "485217905.04210480",
+     "openTime": 1695686400000,
+     "closeTime": 1695772799999,
+     "firstId": 3220151555,
+     "lastId": 3220849281,
+     "count": 697727
+     },
+     {
+     "symbol": "BNBUSDT",
+     "priceChange": "2.60000000",
+     "priceChangePercent": "1.238",
+     "weightedAvgPrice": "211.92276958",
+     "openPrice": "210.00000000",
+     "highPrice": "213.70000000",
+     "lowPrice": "209.70000000",
+     "lastPrice": "212.60000000",
+     "volume": "280709.58900000",
+     "quoteVolume": "59488753.54750000",
+     "openTime": 1695686400000,
+     "closeTime": 1695772799999,
+     "firstId": 672397461,
+     "lastId": 672496158,
+     "count": 98698
+     }
      ]
      */
     func tradingDayPrice (
         symbols: [String],
         timeZone: String? = "0(UDC)",
-        type: APIResponseType? = .FULL,
+        type: ApiResponseType? = .FULL,
         successCall: @escaping (JSON) -> Void
     ) -> Void {
         var ipWeight = symbols.count > 50 ? 200 : 4 * symbols.count
@@ -420,47 +420,28 @@ class SpotApi {
     func kLineData(
         symbol: String,
         interval: KLineInterval,
-        startTime: Int?,
-        endTime: Int?,
-        timeZone: String? = "0(utc)",
+        startTime: Int? = nil,
+        endTime: Int? = nil,
+        timeZone: TimeZone? = .current,
         limit: Int? = 500,
         
-        successCall: @escaping (JSON) -> Void
+        successCall: @escaping (JSON) -> Void,
+        failureCall: @escaping (BinanceAPIError) -> Void
     ) -> Void {
         
-        BinanceApiRequest.binanceApiRequest(url: baseURL.rawValue + "/api/v3/klines",
-                          ipWeight:2,
-                          parameters: [
-                            "symbol": symbol,
-                            "interval": interval,
-                            "startTime": startTime,
-                            "endTime": endTime,
-                            "timeZone": timeZone,
-                            "limit": limit
-                          ],
-                          success: successCall
+        BinanceApiRequest.binanceApiRequest(
+            url: baseURL.rawValue + "/api/v3/klines",
+            ipWeight:2,
+            parameters: [
+                "symbol": symbol,
+                "interval": interval.rawValue.toString(),
+                "startTime": startTime,
+                "endTime": endTime,
+                "timeZone": (timeZone?.secondsFromGMT())! / 3600,
+                "limit": limit
+            ],
+            success: successCall,
+            failure: failureCall
         )
     }
-}
-
-enum KLineInterval:String {
-    case s_1 = "1s"
-    case m_1 = "1m"
-    case m_3 = "3m"
-    case m_5 = "5m"
-    case m_15 = "15m"
-    case h_1 = "1h"
-    case h_2 = "2h"
-    case h_4 = "4h"
-    case h_6 = "6h"
-    case h_8 = "8h"
-    case h_12 = "12h"
-    case d_1 = "1d"
-    case w_1 = "1w"
-    case M_1 = "1M"
-}
-
-enum APIResponseType:String {
-    case FULL
-    case MINI
 }

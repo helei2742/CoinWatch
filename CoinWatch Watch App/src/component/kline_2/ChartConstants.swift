@@ -1,101 +1,69 @@
 //
-//  CandlestickChart.swift
+//  ChartConstants.swift
 //  CoinWatch
 //
-//  Created by 何磊 on 2024/9/24.
+//  Created by 何磊 on 2024/9/27.
 //
-
 import SwiftUI
-import Charts
 
-/**
- 蜡烛图
- 
- 使用方式：
- Chart() { element in
- // 这里调用 generalChart() 方法
- CandlestickChart().generalChart()
- }
- */
-struct CandlestickChart {
-    
-    /**
-     高的比例，所有与高有关的数据都要乘
-     */
-    let heightRatio:Double
-    
-    /**
-     一根蜡烛的宽度
-     */
-    let itemWidth: Double
-    
-    
-    func generalChart (candlestick: Candlestick) -> any ChartContent {
-        let res = PointMark (
-            x: .value("日期", candlestick.openTime, unit: .day),
-            y: .value("美元", candlestick.close)
-        )
-        let t = res.symbol(symbol: {
-            CandlesstickItem(
-                candlestick: candlestick,
-                heightRatio: heightRatio,
-                itemWidth: itemWidth
-            )
-            }
-        )
-        print(t)
-        return t
-    }
-}
+enum MAType: RawRepresentable{
 
-/**
- 一根蜡烛的形状
- */
-struct CandlesstickItem: Shape  {
-    
-    /**
-     一根k线图的数据
-     */
-    var candlestick: Candlestick
-    
-    /**
-     高的比例，所有与高有关的数据都要乘
-     */
-    let heightRatio: Double
-    
-    /**
-     一根蜡烛的宽度
-     */
-    let itemWidth: Double
-    
-    
-    func path(in rect: CGRect) -> Path {
         
-        Path { path in
-            //绘制上下影线s
-            let width = rect.width
-//            print(rect.height)
-            print("width \(rect.width) height: \(rect.height)")
-            
-            path.move(to: CGPoint(x: width / 2, y: candlestick.high * heightRatio))
-            path.addLine(to: CGPoint(x: width / 2, y: candlestick.low * heightRatio))
-            
-            //绘制实体部分 (矩形)
-            let rect = CGRect (
-                x: (itemWidth / 2) - (itemWidth / 4),
-                y: candlestick.close * heightRatio,
-                width: itemWidth / 2,
-                height:  CGFloat(abs(candlestick.open - candlestick.close) * heightRatio)
-            )
-            path.addRect(rect)
-            
-            
+    var rawValue: MATypeItem {
+        switch self {
+        case .ma_1:
+            return MATypeItem(interval: 1, color: .red)
+        case .ma_5:
+            return MATypeItem(interval: 5, color: Color.orange)
+        case .ma_15:
+            return MATypeItem(interval: 15, color: Color.yellow)
+        case .ma_20:
+            return MATypeItem(interval: 20, color: Color.green)
+        case .ma_60:
+            return MATypeItem(interval: 60, color: Color.gray)
+        case .ma_120:
+            return MATypeItem(interval: 120, color: Color.purple)
         }
     }
+    
+    typealias RawValue = MATypeItem
+
+    case ma_1
+    case ma_5
+    case ma_15
+    case ma_20
+    case ma_60
+    case ma_120
+    
+    
+    init?(rawValue: MATypeItem) {
+        self = .ma_5
+        if rawValue.interval == 1 {
+            self = .ma_1
+        }
+        if rawValue.interval == 5 {
+            self = .ma_5
+        }
+        if rawValue.interval == 15 {
+            self = .ma_15
+        }
+        if rawValue.interval == 20 {
+            self = .ma_20
+        }
+        if rawValue.interval == 60 {
+            self = .ma_60
+        }
+        if rawValue.interval == 120 {
+            self = .ma_120
+        }
+        
+    }
 }
 
-
-
+struct MATypeItem {
+    var interval:Int
+    var color:Color
+}
 
 enum KLineInterval: RawRepresentable {
     var rawValue: KLineIntervalItem {

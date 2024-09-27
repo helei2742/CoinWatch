@@ -11,9 +11,9 @@ import SwiftUI
 /**
     一条线含的所有数据
 */
-struct LineDataEntry: Identifiable {
+class LineDataEntry: Identifiable , Sendable{
     
-    let id = UUID()
+    var id: UUID = UUID()
 
     /**
         开盘时间
@@ -44,7 +44,7 @@ struct LineDataEntry: Identifiable {
     /**
         最低价格
     */
-    let low: Double
+    let low: Double 
 
 
     /**
@@ -52,6 +52,27 @@ struct LineDataEntry: Identifiable {
     */
     var volume: Double = 0.0
     
+    var dictOfMA: [Int:Double] = [:]
+    
+    init (
+        openTime: Date,
+        closeTime: Date,
+        open: Double,
+        close: Double,
+        high: Double,
+        low: Double
+    ) {
+        self.openTime = openTime
+        self.closeTime = closeTime
+        self.open = open
+        self.close = close
+        self.high = high
+        self.low = low
+    }
+    
+    func addMA(maInterval:Int, value: Double) {
+        dictOfMA[maInterval] = value
+    }
     
     /**
         获取应该现实的颜色
@@ -62,6 +83,7 @@ struct LineDataEntry: Identifiable {
         return close > open ? Color.green : Color.red
     }
 }
+
 
 extension Double {
 

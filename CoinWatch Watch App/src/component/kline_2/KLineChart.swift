@@ -31,7 +31,7 @@ struct KLineChart: View {
     /**
      是否长按k线的某点
      */
-    @GestureState private var isLineItemLongPress = false
+    @State private var isLineItemLongPress = false
     
     
     /**
@@ -47,6 +47,11 @@ struct KLineChart: View {
     @State var scrollViewOffset:Double?
     
     /**
+     表冠滚动的值
+     */
+    @State private var crownValue: Double = 0.0
+    
+    /**
      当前视图显示的K线线段的个数
      */
     let viewKLineItemCount:Int = 15
@@ -55,7 +60,6 @@ struct KLineChart: View {
      k线元素之间的间距
      */
     let marginOfLineItem: Double = 0
-    
     
     /**
      坐标轴线的宽度
@@ -158,128 +162,84 @@ struct KLineChart: View {
      */
     @ViewBuilder
     var longPressPrintView: some View {
-        // 十字线
-        
-        //获取相对于视图的x坐标
+        //获取x坐标
         let xPosition:CGFloat = selectedPosition!.x
         let yPosition:CGFloat = selectedPosition!.y
         
-        let index = Int(xPosition / lineItemWidth)
+//        let windowX = xPosition - scrollViewOffset!
+        
+        //点击的坐标在左边还是右边
+        let clickWindowLeft:Bool = xPosition < windowWidth/2
+        //点击的坐标在左边还是右边
+        let clickWindowTop:Bool = yPosition < windowHeight/2
+        
+        
+        let index = Int((xPosition + scrollViewOffset!) / lineItemWidth)
         let itemData = dataset.getIndex(index)
         
-        Path { path in
-            path.move(to: CGPoint(x: xPosition, y: 0))
-            path.addLine(to: CGPoint(x: xPosition, y: scrollAreaHeight))
-            
-            path.move(to: CGPoint(x: 0, y: yPosition))
-            path.addLine(to: CGPoint(x: windowWidth, y: yPosition))
-        }
-        .stroke(
-            .gray,
-            lineWidth: 1
-        )
-        
-        //信息卡片
-        
-        //显示在坐标还是右边
-        let showOnLeft:Bool = xPosition > windowWidth / 2
-        HStack {
-            if showOnLeft == false {
-                Spacer()
+        if let itemData = itemData {
+            // 十字线
+            Path { path in
+                path.move(to: CGPoint(x: xPosition, y: 0))
+                path.addLine(to: CGPoint(x: xPosition, y: scrollAreaHeight))
             }
+            .stroke(
+                .gray,
+                lineWidth: 1
+            )
             
-            VStack {
-                Text("时间")
-                Text("开")
-                Text("高")
-                Text("低")
-                Text("收")
-            }
-            
-            VStack{
-                Text(DateUtil.dateToStr(date: itemData.openTime))
-                Text(itemData.open.coinPriceFormat())
-                Text(itemData.high.coinPriceFormat())
-                Text(itemData.low.coinPriceFormat())
-                Text(itemData.close.coinPriceFormat())
-            }
-            
-            
-            if showOnLeft {
-                Spacer()
-            }
-        }
-        .padding(10)
-        .font(.littleFont())
-        .background(Color.black.opacity(0.5))
-        .foregroundStyle(.white)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 10)
-        )
-    }
-    
-    /**
-     offset更改的回调
-     */
-    func whenOffsetChange(newOffset: Double) {
-        //实时更新偏移量
-        print("new scroll offset \(newOffset)")
-        
-        //剩余没展示的点不足以覆盖整个窗口，再次尝试请求数据，需要再获取k线数据
-        if dataset.count >= viewKLineItemCount ,
-           newOffset < (Double(viewKLineItemCount) * lineItemWidth) ,
-           !isLoadingKLineData {
-            
-            isLoadingKLineData = true
-            
-            let oldOffset = newOffset
-            let oldCount = dataset.count
-            
-            //网络请求更新数据
-            loadLineDataNetwork(beforeSuccessComplate: {
-//                position.scrollTo(point: CGPoint(x: Double(dataset.count - oldCount)*lineItemWidth + oldOffset , y: 0))
-            })
-        }
-        
-        
-        updateHeightRatioAndOffset(windowStart: Int(newOffset/lineItemWidth))
-    }
-    
-    /**
-     网络请求加载数据，并处理相应的状态
-     */
-    func loadLineDataNetwork(beforeSuccessComplate:(()->Void)?) {
-        print("开始价值k显示数据")
-        dataset.loadLineData { res in
-            switch res {
-            case false: // load k线数据失败
-                print("Load K 线数据失败")
-            case true: // 成功
+            ZStack{
+                Path { path in
+                    path.move(to: CGPoint(x: 0, y: yPosition))
+                    path.addLine(to: CGPoint(x: windowWidth, y: yPosition))
+                }
+                .stroke(
+                    .gray,
+                    lineWidth: 1
+                )
+                let priceX = clickWindowLeft ? windowWidth - 25 : 20
                 
-                
-                print("load k 线数据完成 \n \(dataset.count)")
-                //根据K线数据个数，滚动到相应位置
-                scrollAreaWidth = Double(dataset.count) * lineItemWidth
-                
-                print("视图状态已更新， scrollAreaWidth \(scrollAreaWidth)")
-                
-                beforeSuccessComplate?()
-                isLoadingKLineData = false
+                Text(String(format:"%.2f" ,(scrollAreaHeight - yPosition + heightOffset)/heightRatio))
+                    .font(.littleFont())
+                    .padding(3)
+                    .background(.black)
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .position(x: priceX, y: yPosition)
             }
+            
+            let cardX = clickWindowLeft ? xPosition + 3 : max(xPosition - windowWidth/3, 0)
+            
+            let cardY = clickWindowTop ? yPosition : yPosition - windowHeight/3
+            
+            
+            
+            //信息卡片
+            HStack {
+                VStack {
+                    Text("时间")
+                    Text("开")
+                    Text("高")
+                    Text("低")
+                    Text("收")
+                }
+                VStack{
+                    Text(DateUtil.dateToStr(date: itemData.openTime))
+                    Text(itemData.open.coinPriceFormat())
+                    Text(itemData.high.coinPriceFormat())
+                    Text(itemData.low.coinPriceFormat())
+                    Text(itemData.close.coinPriceFormat())
+                }
+            }
+            .padding(10)
+            .font(.littleFont())
+            .background(Color.black.opacity(0.5))
+            .foregroundStyle(.white)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 10)
+            )
+            .position(x: cardX, y: cardY)
         }
-    }
-    
-    /**
-        更新高度比和偏移量
-     */
-    func updateHeightRatioAndOffset(windowStart: Int) {
-        //移动后要计算最大值和最小值
-        print("更新前 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
-        dataset.calMaxMinPriceOfWindow(start: windowStart)
-        heightRatio = windowHeight / (dataset.maxPrice - dataset.minPrice)
-        heightOffset = dataset.minPrice * heightRatio
-        
-        print("更新完毕 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
     }
     
     @ViewBuilder
@@ -337,18 +297,6 @@ struct KLineChart: View {
                 
             })
         }
-        .gesture (
-            LongPressGesture(minimumDuration: 1)
-                .updating($isLineItemLongPress){ currentState, gestureState, transaction in
-                    gestureState = currentState
-                }
-                .simultaneously(
-                    with:DragGesture(minimumDistance: 0)
-                        .onChanged({ value in
-                            selectedPosition = value.location
-                        })
-                )
-        )
     }
     
     /**
@@ -382,17 +330,33 @@ struct KLineChart: View {
                 }
                 whenOffsetChange(newOffset: newOffset)
            }
-
-
+            .focusable(true)
+            .digitalCrownRotation( //表冠滚动
+                $crownValue,
+                from: 0.0,
+                through: Double(dataset.count),
+                by: 1.0,
+                sensitivity: .low,
+                isContinuous: false,
+                isHapticFeedbackEnabled: true
+            )
+            .onChange(of: crownValue){ newValue in
+                
+                let index:Int = dataset.count - Int(newValue)
+                let scrollX:Double = Double(index) * lineItemWidth - windowWidth + lineItemWidth/2
+                position.scrollTo(x: scrollX)
+                print("表冠滚动 \(newValue), index:\(index), scrollX:\(scrollX)")
+            }
         }
         .overlay (  // Y轴
             HStack {
                 Spacer()
                 //Y轴线
                 YAxisLine(
-                    height: windowHeight,
-                    max: dataset.maxPrice,
-                    min: dataset.minPrice,
+                    windowHeight: windowHeight,
+                    windowWidth: windowWidth,
+                    heightRatio: heightRatio,
+                    heightOffset: heightOffset,
                     scaleNumber: 3
                 )
                 .stroke(
@@ -400,11 +364,93 @@ struct KLineChart: View {
                     lineWidth: 1
                 )
                 .frame(
-                    width: scaleWidth,
+                    width: windowWidth,
                     height: windowHeight
                 )
             }
         )
+        .gesture ( //手势按压
+            LongPressGesture(minimumDuration: 3)
+//                .updating($isLineItemLongPress){ currentState, gestureState, transaction in
+//                    gestureState = currentState
+//                }
+                .onChanged { value in
+                    self.isLineItemLongPress = !self.isLineItemLongPress
+                }
+                .simultaneously(
+                    with:DragGesture(minimumDistance: 0)
+                        .onChanged({ value in
+                            selectedPosition = value.location
+                            
+                            print("按压，坐标（x:\(selectedPosition!.x),y:\(selectedPosition!.y)） scrollOffset:\(scrollViewOffset) windowWidth:\(windowWidth)")
+                        })
+                )
+        )
+    }
+    
+    
+    /**
+     offset更改的回调
+     */
+    func whenOffsetChange(newOffset: Double) {
+        //实时更新偏移量
+        print("new scroll offset \(newOffset)")
+        
+        //剩余没展示的点不足以覆盖整个窗口，再次尝试请求数据，需要再获取k线数据
+        if dataset.count >= viewKLineItemCount ,
+           newOffset < (Double(viewKLineItemCount) * lineItemWidth) ,
+           !isLoadingKLineData {
+            
+            isLoadingKLineData = true
+            
+            let oldOffset = newOffset
+            let oldCount = dataset.count
+            
+            //网络请求更新数据
+            loadLineDataNetwork(beforeSuccessComplate: {
+                position.scrollTo(point: CGPoint(x: Double(dataset.count - oldCount)*lineItemWidth + oldOffset , y: 0))
+            })
+        }
+        
+        
+        updateHeightRatioAndOffset(windowStart: Int(newOffset/lineItemWidth))
+    }
+    
+    /**
+     网络请求加载数据，并处理相应的状态
+     */
+    func loadLineDataNetwork(beforeSuccessComplate:(()->Void)?) {
+        print("开始价值k显示数据")
+        dataset.loadLineData { res in
+            switch res {
+            case false: // load k线数据失败
+                print("Load K 线数据失败")
+            case true: // 成功
+                
+                
+                print("load k 线数据完成 \n \(dataset.count)")
+                //根据K线数据个数，滚动到相应位置
+                scrollAreaWidth = Double(dataset.count) * lineItemWidth
+                
+                print("视图状态已更新， scrollAreaWidth \(scrollAreaWidth)")
+                
+                beforeSuccessComplate?()
+                isLoadingKLineData = false
+            }
+        }
+    }
+    
+    /**
+        更新高度比和偏移量
+     */
+    func updateHeightRatioAndOffset(windowStart: Int) {
+        //移动后要计算最大值和最小值
+        print("更新前 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
+        dataset.calMaxMinPriceOfWindow(start: windowStart)
+        heightRatio = windowHeight / (dataset.maxPrice - dataset.minPrice)
+        heightOffset = dataset.minPrice * heightRatio
+        
+        print("更新完毕 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
     }
 }
 

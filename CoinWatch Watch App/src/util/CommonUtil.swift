@@ -27,6 +27,9 @@ class CommonUtil {
         return base
     }
     
+    static func generalCoinSymbol(base: String, quote: String) -> String{
+        return base + quote
+    }
     
     static func getCoinLogoImageUrl(base: String) -> String {
         //return URL(string: SystemConfig.COIN_LOGO_BASE_URL + "/" + base + ".png")!

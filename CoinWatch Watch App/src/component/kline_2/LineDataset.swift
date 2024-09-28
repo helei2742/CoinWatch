@@ -90,7 +90,12 @@ class LineDataset {
         return DateUtil.calDate(from: endTime, days: -1 * 30, timeUnit: kLineInterval.rawValue.timeUnit) ?? Date()
     }
 
-    func getIndex(_ index:Int) -> LineDataEntry {
+    func getIndex(_ index:Int) -> LineDataEntry? {
+        
+        if dataset.isEmpty || index >= dataset.count || index < 0 {
+            return nil
+        }
+
         return dataset[index]
     }
 

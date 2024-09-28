@@ -12,6 +12,9 @@ import Charts
 struct DeepInfoCard: View {
     @Binding var rawSelectX: Double?
     
+    @State private var showingPopover = false
+    
+    
     var selectedData: DeepInfoPoint? {
         get {
             if let rawSelectX {
@@ -27,6 +30,7 @@ struct DeepInfoCard: View {
     }
     
     var deepDirection:DeepDirection
+    
     var deepArray:[DeepInfoPoint]
     
     var body: some View {
@@ -34,8 +38,8 @@ struct DeepInfoCard: View {
            
                 Chart(deepArray, id: \.price){ element in
                     PointMark (
-                        x: .value("日期", element.price),
-                        y: .value("美元", element.volume)
+                        x: .value("price", element.price),
+                        y: .value("vol", element.volume)
                     )
                     .foregroundStyle(chartColor())
                     .symbolSize(8)
@@ -48,22 +52,21 @@ struct DeepInfoCard: View {
 
                     if let rawSelectX {
                         
-                        RuleMark (
-                            x: .value("selected", rawSelectX)
-                        )
-                        .foregroundStyle(Color.blue.opacity(0.1))
-                        .annotation(
-                            position: .trailing, spacing: 0,
-                            overflowResolution: .init(
-                                x: .fit(to: .chart),
-                                y: .disabled
-                            )
-                        ) {
-                            valueSelectionPopover
-                        }
+//                        RuleMark (
+//                            x: .value("selected", rawSelectX)
+//                        )
+//                        .foregroundStyle(Color.blue.opacity(0.1))
+//                        .annotation(
+//                            position: .leading, spacing: 0,
+//                            overflowResolution: .init(
+//                                x: .fit(to: .chart),
+//                                y: .disabled
+//                            )
+//                        ) {
+//                            valueSelectionPopover
+//                        }
                     }
                 }
-            
                 .chartXScale(domain: [deepArray[0].price,
                                       deepArray[deepArray.count-1].price])
                 .chartYAxis(.hidden)
@@ -98,6 +101,7 @@ struct DeepInfoCard: View {
                 RoundedRectangle(cornerRadius: 4)
                     .foregroundStyle(Color.gray.opacity(1))
             }
+//            .allowsHitTesting(false)
         } else {
             Text("error")
             EmptyView()

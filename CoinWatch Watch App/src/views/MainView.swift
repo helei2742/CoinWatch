@@ -11,25 +11,34 @@ struct MainView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     
+    @StateObject var natificationBar: NatificationBar = NatificationBar(
+        isShowBar: false, dynamicContent: AnyView(EmptyView())
+    )
+
+        
     var body: some View {
-        
-        //let component = viewRouter.routeConfig.pathDict[viewRouter.routeConfig.currentPath]?.component as View
-        
-        switch viewRouter.currentView {
-        case .MainPage:
-            Image(systemName: "bitcoinsign.gauge.chart.lefthalf.righthalf")
-                .resizable()
-                .scaledToFill()
-                .foregroundStyle(Color(#colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)))
-                .onTapGesture {
-                    viewRouter.currentView = .LoginAndRegisterPage
-                }
-        case .LoginAndRegisterPage:
-            LoginOrRegisterPage()
-        case .HomePage:
-            HomePage()
-        case .CoinDetail:
-            CoinDetailPage()
+        ZStack{
+            //let component = viewRouter.routeConfig.pathDict[viewRouter.routeConfig.currentPath]?.component as View
+            
+            switch viewRouter.currentView {
+            case .MainPage:
+                Image(systemName: "bitcoinsign.gauge.chart.lefthalf.righthalf")
+                    .resizable()
+                    .scaledToFill()
+                    .foregroundStyle(Color(#colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)))
+                    .onTapGesture {
+                        viewRouter.currentView = .LoginAndRegisterPage
+                    }
+            case .LoginAndRegisterPage:
+                LoginOrRegisterPage()
+            case .HomePage:
+                HomePage()
+            case .CoinDetail:
+                CoinDetailPage().environmentObject(natificationBar)
+            }
+            
+            // 通知栏
+            natificationBar.content()
         }
         
     }

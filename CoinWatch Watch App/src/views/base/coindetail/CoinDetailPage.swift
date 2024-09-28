@@ -19,16 +19,10 @@ struct CoinDetailPage: View {
             CoinDetailWindow()
                 .environmentObject(coinInfo)
             
-            VStack {
-                HStack {
-                    BackButton(width: 20)
-                        .offset(x: 10, y: -20)
-                    Spacer()
-                }
-                Spacer()
-            }
-            Spacer()
+//            BackButton(width: 20)
+//                .position(x: 20, y: -20)
         }
+        .frame(width: .infinity, height: .infinity)
         .onAppear {
             if let payload = ViewRouter.getPayLoad(viewName: .CoinDetail){
                 print(payload)

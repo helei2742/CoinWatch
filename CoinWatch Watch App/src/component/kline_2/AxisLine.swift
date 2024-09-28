@@ -32,19 +32,24 @@ struct XAxisLine: Shape {
 struct YAxisLine: Shape {
     
     /**
-     轴线高度
+       窗口高度
      */
-    let height: CGFloat
+    let windowHeight: CGFloat
     
     /**
-     最大值
+       窗口宽度
      */
-    let max: CGFloat
+    let windowWidth: CGFloat
     
     /**
-     最小值
+     组件item的高度比例，因为y轴是价格，所以表示单位价格的长度 height / (maxPrice - minPrice)
      */
-    let min: CGFloat
+    let heightRatio: Double
+    
+    /**
+     高度偏移量
+     */
+    let heightOffset: Double
     
     /**
      刻度数
@@ -54,30 +59,23 @@ struct YAxisLine: Shape {
     func path(in rect: CGRect) -> Path {
         Path { path in
             let width:CGFloat = rect.width
-            
-            let heightPrice:Double = (max - min) / height
-            
+                        
             //画轴线
-            path.move(to: CGPoint(x: width / 2, y: height))
-            path.addLine(to: CGPoint(x: width / 2, y: 0))
+            path.move(to: CGPoint(x: width - 2, y: windowHeight))
+            path.addLine(to: CGPoint(x: width - 2, y: 0))
             
             //画刻度
-            let interval:CGFloat = height / Double(scaleNumber)
+            let interval:CGFloat = windowHeight / Double(scaleNumber)
             
             let numbers: [Int] = Array(0...scaleNumber)
             numbers.forEach { i in
                 let height:CGFloat = Double(i) * interval
                 
-                let printPrice = height * heightPrice
+                let printPrice = (windowHeight - height + heightOffset)/heightRatio
                 
                 //刻度线
-                path.move(to: CGPoint(x: 0, y:height))
+                path.move(to: CGPoint(x: width - 10, y:height))
                 path.addLine(to: CGPoint(x: width, y:height))
-                
-                
-                Text(String(printPrice))
-                    .font(.footnote)
-                    .position(x: 0, y: height)
             }
         
         }

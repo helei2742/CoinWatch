@@ -48,7 +48,10 @@ struct CoinDetailWindow: View {
                 .background(Color.blue)
                 
                 VStack { //K 线图
-                    KLineChart(symbol: CommonUtil.generalCoinSymbol(base: coinInfo.base, quote: coinInfo.quote), kLineInterval: .d_1)
+                    KLineChart(
+                        symbol: CommonUtil.generalCoinSymbol(base: coinInfo.base,quote: coinInfo.quote),
+                        kLineInterval: .d_1,
+                        maIntervals: [MAType.ma_15, MAType.ma_20])
                         .frame(height: geometry.size.height * 0.7)
                     VStack{
                         Text("显示用户仓位和挂单")

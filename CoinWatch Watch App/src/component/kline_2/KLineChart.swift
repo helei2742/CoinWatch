@@ -10,7 +10,13 @@ import SwiftUI
 
 
 
+
 struct KLineChart: View {
+    /**
+        控制刷新
+     */
+    @State private var refreshViewId = Date().timeIntervalSince1970
+    
     
     /**
      当前K线视图的宽度
@@ -40,16 +46,26 @@ struct KLineChart: View {
     @State private var isLoadingKLineData: Bool = false
     
     /**
+     当前显示哪些图表
+     */
+    @State private var chartPrintState: ChartPrintState = .K_BOLL_LINE
+    
+    /**
      K线视图的Position， 可用于滚动到指定位置
      */
     @State var position:ScrollPosition = ScrollPosition(edge: .leading)
     
+    /**
+     当前图表滚动区域的偏移量
+     */
     @State var scrollViewOffset:Double?
     
     /**
      表冠滚动的值
      */
     @State private var crownValue: Double = 0.0
+    
+
     
     /**
      当前视图显示的K线线段的个数
@@ -103,11 +119,30 @@ struct KLineChart: View {
         windowLength: 0
     )
     
+    /**
+     均线类型
+     */
+    var maIntervals: [MATypeItem] = []
     
-    init(symbol: String, kLineInterval: KLineInterval) {
+    /**
+     boll线设置
+     */
+    var bollConfig:(average:Int, n:Int) = (average: 21, n: 2)
+    
+    init(
+        symbol: String,
+        kLineInterval: KLineInterval,
+        maIntervals: [MATypeItem],
+        bollConfig:(average:Int, n:Int) = (average: 21, n: 2)
+    ) {
         self.dataset.symbol = symbol
         self.dataset.kLineInterval = kLineInterval
         self.dataset.windowLength = viewKLineItemCount
+        self.maIntervals.append(contentsOf: maIntervals)
+        
+        
+        self.bollConfig = bollConfig
+        
     }
     
     var body: some View {
@@ -119,13 +154,20 @@ struct KLineChart: View {
                     .font(.title)
                     .foregroundStyle(.white)
                 
-                //x线图
+                
+                //加载动画
+                if isLoadingKLineData {
+                    
+                }
                 kLineScrollArea
-                    .frame(
-                        maxWidth: .infinity, maxHeight: .infinity
+                    .frame(maxWidth: .infinity, maxHeight: .infinity
                     )
                     .background(.gray.opacity(0.5))
-                
+                //图表
+//                dynamicChartPrinter
+                //图表控制栏
+                chartInfoControlBar
+
                 
                 // 显示十字线以及按住的KLineItem的信息
                 if isLineItemLongPress { //在长按
@@ -157,6 +199,163 @@ struct KLineChart: View {
         }
     }
     
+    func focusLineItem() -> LineDataEntry? {
+        if scrollViewOffset == nil || selectedPosition == nil {
+            return nil
+        }
+        var index:Int = Int((scrollViewOffset! + windowWidth) / lineItemWidth)
+        if isLineItemLongPress && selectedPosition != nil {
+            index = Int((selectedPosition!.x + scrollViewOffset!) / lineItemWidth)
+        }
+        return dataset.getIndex(index)
+    }
+    
+    /**
+     图表信息栏
+     */
+    @ViewBuilder
+    var chartInfoControlBar: some View {
+        //以及当前显示图表状态
+        HStack {
+            // 实时获取当前显示的k线数据的下标
+            let lineItem = focusLineItem()
+            
+            if lineItem != nil, chartPrintState == .MA_LINE, chartPrintState == .K_MA_LINE {
+                //显示每根均线当前位置的价值
+                ForEach(maIntervals, id: \.interval) { maInterval in
+                    
+                    let interval = maInterval.interval
+                    Text("MA(\(interval)): \(String(describing: lineItem?.dictOfMA[interval]))")
+                        .font(.littleFont())
+                        .foregroundStyle(maInterval.color)
+                }
+            }
+            
+            if lineItem != nil, chartPrintState == .K_BOLL_LINE {
+                //显示Boll指标值
+                let bollLine = lineItem!.bollLine
+                Text("BOLL:(\(bollConfig.average),\(bollConfig.n))")
+                    .foregroundStyle(.orange)
+                Text("UP:\(bollLine.upper))")
+                    .foregroundStyle(.orange)
+                Text("MB:\(bollLine.ma)")
+                    .foregroundStyle(.pink)
+                Text("DN:\(bollLine.lower)")
+                    .foregroundStyle(.purple)
+            }
+            
+            //选择k线间隔
+            List{
+                Picker("k线间隔", selection: $dataset.kLineInterval) {
+                    Text("15分").tag(KLineInterval.m_15)
+                    Text("1时").tag(KLineInterval.h_1)
+                    Text("1日").tag(KLineInterval.d_1)
+                    Text("1周").tag(KLineInterval.w_1)
+                    Text("1月").tag(KLineInterval.M_1)
+                }
+            }
+            
+            // 切换显示类型，选择显示的类型，
+            Button {
+                chartPrintState = chartPrintState.next()
+            } label: {
+                Label("Graph", systemImage: "chevron.right.circle")
+                    .labelStyle(.iconOnly)
+                    .imageScale(.large)
+                    .padding()
+                    .animation(.easeInOut, value: chartPrintState)
+            }
+        }
+        .font(.littleFont())
+        .frame (
+            height: 15
+        )
+    }
+    
+
+    
+    
+    @ViewBuilder
+    var maLineChart: some View {
+        if dataset.count > 0 {
+            //绘制均线
+            ForEach(maIntervals, id: \.interval){ maInterval in
+                MALine(
+                    maType: maInterval,
+                    lineDataEntryList: $dataset.dataset,
+                    heightRatio: $heightRatio,
+                    heightOffset: $heightOffset,
+                    entryWidth: $lineItemWidth
+                )
+                .content
+                .frame(
+                    maxWidth: .infinity, maxHeight: .infinity
+                )
+            }
+        }
+    }
+    
+    
+    @ViewBuilder
+    var bollLineChart: some View {
+        //Boll线
+        BollLine(
+            lineDataEntryList: $dataset.dataset,
+            heightRatio: $heightRatio,
+            heightOffset: $heightOffset,
+            entryWidth: $lineItemWidth
+        )
+        .content
+        .frame(
+            maxWidth: .infinity, maxHeight: .infinity
+        )
+    }
+    /**
+     动态显示当前的图表
+     */
+    @ViewBuilder
+    var dynamicExtraChartPrinter: some View {
+        if chartPrintState == .MA_LINE || chartPrintState == .K_MA_LINE {
+            maLineChart
+                .frame(width: scrollAreaWidth, height: scrollAreaHeight)
+                .scaleEffect(x:1,y:-1)
+                .id(refreshViewId)
+                
+        }
+        
+        if chartPrintState == .K_BOLL_LINE {
+            bollLineChart
+            .frame(width: scrollAreaWidth, height: scrollAreaHeight)
+            .scaleEffect(x:1,y:-1)
+            .id(refreshViewId)
+        }
+            
+    }
+    
+    /**
+     最新价格到y轴的线
+     */
+    @ViewBuilder
+    var newLineDataPriceLine: some View {
+        Path { path in
+            if let last = dataset.dataset.last{
+                let priceY = last.close * heightRatio - heightOffset
+                var priceX = Double(dataset.count) * lineItemWidth
+                priceX -= lineItemWidth / 2
+                priceX -= scrollViewOffset ?? 0
+                
+                let rect = CGRect (
+                    x: priceX,
+                    y: priceY,
+                    width: windowWidth - priceX,
+                    height: 1
+                )
+                
+                path.addRect(rect)
+            }
+        }
+    }
+    
     /**
      长按k线中的元素后展示的十字线和信息卡
      */
@@ -166,7 +365,7 @@ struct KLineChart: View {
         let xPosition:CGFloat = selectedPosition!.x
         let yPosition:CGFloat = selectedPosition!.y
         
-//        let windowX = xPosition - scrollViewOffset!
+        //        let windowX = xPosition - scrollViewOffset!
         
         //点击的坐标在左边还是右边
         let clickWindowLeft:Bool = xPosition < windowWidth/2
@@ -266,6 +465,10 @@ struct KLineChart: View {
             }
         }
         .scrollTargetLayout()
+        .overlay(
+            //K线上显示的所有额外图表
+            dynamicExtraChartPrinter
+        )
         .overlay(   //X 轴
             VStack {
                 Spacer()
@@ -307,10 +510,10 @@ struct KLineChart: View {
         HStack {
             // 绘制可滚动的k线展示区域以及x轴
             ScrollView(.horizontal) {
-                KLineItemList 
+                KLineItemList
             }
             .scrollPosition($position)
-            .onScrollGeometryChange(
+            .onScrollGeometryChange( // 更新实偏移
                 for: CGFloat.self,
                 of: { geo in geo.contentOffset.x},
                 action:{ old, new in
@@ -318,9 +521,14 @@ struct KLineChart: View {
                     self.scrollViewOffset = new
                 }
             )
-            .onChange(of: scrollViewOffset) { _, new in
+            .onChange(of: scrollViewOffset) { old, new in
                 guard let new else { return }
-                print("当前 x 轴滚动偏移：\(new.formatted())")
+                
+//                if !new.isPositionedByUser {  // 调用position.scrollTo() 引起的偏移不调用whenOffsetChange
+//                    print("系统引起的偏移，from\(old), to\(new)")
+//                    return
+//                }
+                
                 var newOffset = new
                 if newOffset < 0 {
                     newOffset = 0
@@ -328,9 +536,10 @@ struct KLineChart: View {
                 if newOffset > scrollAreaWidth {
                     newOffset = scrollAreaWidth
                 }
+                print("用户滚动偏移：\(new.formatted())")
+                
                 whenOffsetChange(newOffset: newOffset)
-           }
-            .focusable(true)
+            }
             .digitalCrownRotation( //表冠滚动
                 $crownValue,
                 from: 0.0,
@@ -340,12 +549,28 @@ struct KLineChart: View {
                 isContinuous: false,
                 isHapticFeedbackEnabled: true
             )
-            .onChange(of: crownValue){ newValue in
+            .onChange(of: crownValue){ _, newValue in
                 
                 let index:Int = dataset.count - Int(newValue)
-                let scrollX:Double = Double(index) * lineItemWidth - windowWidth + lineItemWidth/2
+                let scrollX:Double = Double(index) * lineItemWidth - windowWidth + lineItemWidth / 2
+                
                 position.scrollTo(x: scrollX)
                 print("表冠滚动 \(newValue), index:\(index), scrollX:\(scrollX)")
+            }
+            .focusable(true)
+            .onChange(of: dataset.kLineInterval) { _, new in //监听k线种类的改变，手动刷新
+                
+                loadLineDataNetwork(beforeSuccessComplate: {
+                    if dataset.count >= viewKLineItemCount {
+                        print("K线类型改变，加载数据完毕。scrollTo x-\(scrollAreaWidth)")
+                        print("scrollOffset:\(String(describing: scrollViewOffset)), position\(String(describing: scrollPosition))")
+                        
+                        position.scrollTo(x: scrollAreaWidth)
+                        updateHeightRatioAndOffset(windowStart: 0)
+                        
+                        print("scrollOffset:\(String(describing: scrollViewOffset)), position\(String(describing: scrollPosition))")
+                    }
+                })
             }
         }
         .overlay (  // Y轴
@@ -371,9 +596,6 @@ struct KLineChart: View {
         )
         .gesture ( //手势按压
             LongPressGesture(minimumDuration: 3)
-//                .updating($isLineItemLongPress){ currentState, gestureState, transaction in
-//                    gestureState = currentState
-//                }
                 .onChanged { value in
                     self.isLineItemLongPress = !self.isLineItemLongPress
                 }
@@ -426,8 +648,6 @@ struct KLineChart: View {
             case false: // load k线数据失败
                 print("Load K 线数据失败")
             case true: // 成功
-                
-                
                 print("load k 线数据完成 \n \(dataset.count)")
                 //根据K线数据个数，滚动到相应位置
                 scrollAreaWidth = Double(dataset.count) * lineItemWidth
@@ -436,12 +656,30 @@ struct KLineChart: View {
                 
                 beforeSuccessComplate?()
                 isLoadingKLineData = false
+                
+                //算ma
+                dataset.calculateMA(maIntervals: maIntervals)
+                
+                dataset.calculateBoll(maInterval: 21, n:2)
+                
+                //刷新
+                updateViewModel()
             }
         }
     }
     
+    
     /**
-        更新高度比和偏移量
+        刷新绑定了refreshViewId的视图
+     */
+    private func updateViewModel() {
+        refreshViewId = Date().timeIntervalSince1970
+        
+    }
+    
+    
+    /**
+     更新高度比和偏移量
      */
     func updateHeightRatioAndOffset(windowStart: Int) {
         //移动后要计算最大值和最小值
@@ -460,6 +698,12 @@ struct KLineChart: View {
 #Preview {
     //       let lineDataEntry = LineDataEntry(openTime: Date(), closeTime: Date(), open: 100, close: 120, high: 131, low: 98, volume: 1000)
     
-    KLineChart(symbol: "BTCUSDT", kLineInterval: .M_1)
+    KLineChart(
+        symbol: "BTCUSDT",
+        kLineInterval: .d_1,
+        maIntervals: [MAType.ma_20, MAType.ma_5, MAType.ma_15],
+        bollConfig: (average: 21, n: 2)
+    )
     //        .frame(width: 120, height: 120)
 }
+

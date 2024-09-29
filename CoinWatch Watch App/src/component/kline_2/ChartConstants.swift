@@ -6,61 +6,38 @@
 //
 import SwiftUI
 
-enum MAType: RawRepresentable{
+/**
+    图表显示的类型
+        K_LINE  只显示k线
+        MA_LINE 只显示MA
+        K_MA_LINE 显示K线和MA线
+*/
+enum ChartPrintState: CaseIterable {
+    case K_LINE
+    case MA_LINE
+    case K_MA_LINE
+    case K_BOLL_LINE
 
-        
-    var rawValue: MATypeItem {
-        switch self {
-        case .ma_1:
-            return MATypeItem(interval: 1, color: .red)
-        case .ma_5:
-            return MATypeItem(interval: 5, color: Color.orange)
-        case .ma_15:
-            return MATypeItem(interval: 15, color: Color.yellow)
-        case .ma_20:
-            return MATypeItem(interval: 20, color: Color.green)
-        case .ma_60:
-            return MATypeItem(interval: 60, color: Color.gray)
-        case .ma_120:
-            return MATypeItem(interval: 120, color: Color.purple)
-        }
-    }
-    
-    typealias RawValue = MATypeItem
-
-    case ma_1
-    case ma_5
-    case ma_15
-    case ma_20
-    case ma_60
-    case ma_120
-    
-    
-    init?(rawValue: MATypeItem) {
-        self = .ma_5
-        if rawValue.interval == 1 {
-            self = .ma_1
-        }
-        if rawValue.interval == 5 {
-            self = .ma_5
-        }
-        if rawValue.interval == 15 {
-            self = .ma_15
-        }
-        if rawValue.interval == 20 {
-            self = .ma_20
-        }
-        if rawValue.interval == 60 {
-            self = .ma_60
-        }
-        if rawValue.interval == 120 {
-            self = .ma_120
-        }
-        
+    func next() -> ChartPrintState {
+        let allCases = ChartPrintState.allCases
+        let currentIndex = allCases.firstIndex(of: self)!
+        let nextIndex = allCases.index(after: currentIndex)
+        return nextIndex < allCases.endIndex ? allCases[nextIndex] : allCases.first!
     }
 }
 
-struct MATypeItem {
+
+
+class MAType{
+    static let ma_1 = MATypeItem(interval: 1, color: .red)
+    static let ma_5 = MATypeItem(interval: 5, color: Color.orange)
+    static let ma_15 = MATypeItem(interval: 15, color: Color.yellow)
+    static let ma_20 = MATypeItem(interval: 20, color: Color.green)
+    static let ma_60 = MATypeItem(interval: 60, color: Color.gray)
+    static let ma_120 = MATypeItem(interval: 120, color: Color.purple)
+}
+
+struct MATypeItem: Hashable {
     var interval:Int
     var color:Color
 }

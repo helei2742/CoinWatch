@@ -44,7 +44,7 @@ class LineDataEntry: Identifiable , Sendable{
     /**
         最低价格
     */
-    let low: Double 
+    let low: Double
 
 
     /**
@@ -52,7 +52,16 @@ class LineDataEntry: Identifiable , Sendable{
     */
     var volume: Double = 0.0
     
+    /**
+        MA指标
+    */
     var dictOfMA: [Int:Double] = [:]
+
+    /**
+        Boll指标
+    */
+    var bollLine: (upper:Double, ma:Double, lower:Double) = (0, 0, 0)
+
     
     init (
         openTime: Date,
@@ -101,3 +110,4 @@ extension Double {
     }
     
 }
+

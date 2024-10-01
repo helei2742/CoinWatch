@@ -60,6 +60,9 @@ struct MALine {
                 
                 if let ma = dataEntry.dictOfMA[maInterval] {
                     let y = ma * heightRatio - heightOffset
+                    if y .isNaN {
+                        return
+                    }
                     let currentPoint:CGPoint = CGPoint(x: width, y: y)
                     
                     if let lastPoint = lastPoint {

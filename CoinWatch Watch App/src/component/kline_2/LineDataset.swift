@@ -90,8 +90,6 @@ class LineDataset {
     */
     var startTime:Date = Date()
     
-    
-
 
     /**
         刷新最新的k线数据，也就是dataset数组里的最后一个的数据
@@ -151,6 +149,10 @@ class LineDataset {
         //判断是否是重新获取k线数据，还是继续加k线数据
         let reload = lastKLineInterval != kLineInterval
 
+        if reload { //是重新加载，清除状态
+            clearState()
+        }
+        
         //更新上次请求的k线频率
         lastKLineInterval = kLineInterval
 
@@ -173,10 +175,6 @@ class LineDataset {
                     self.isEndOfDataset = true
                 }
 
-                if reload { //是重新加载，清除之前所有的
-                    self.dataset.removeAll()
-                }
-
                 actionOfNewData(newData)
                 self.dataset.sort(by:{$0.openTime < $1.openTime})
 
@@ -197,9 +195,12 @@ class LineDataset {
             }
         )
     }
-
+    
+    /**
+        解析Response
+     */
     func generalJSONToLineDataEntryArray(data: JSON) -> [LineDataEntry] {
-        print("解析k线数据")
+//        print("解析k线数据")
         var res:[LineDataEntry] = []
         // 遍历 JSON 数组
         if let jsonArray = data.array {
@@ -223,7 +224,7 @@ class LineDataset {
                 )
             }
         }
-        print("解析k线数据success\n")
+//        print("解析k线数据success\n")
         return res
     }
 
@@ -235,9 +236,9 @@ class LineDataset {
     }
 
     func calMaxMinPriceOfWindow(start: Int, end: Int) {
-        print("计算最小值和最大值 from-\(start) to-\(end)")
+//        print("计算最小值和最大值 from-\(start) to-\(end)")
         if self.dataset.isEmpty || start < 0 || end >= dataset.count{
-            print("数据为不合法，无法计算最值")
+//            print("数据为不合法，无法计算最值")
             return
         }
         var minV:Double = self.dataset[start].low
@@ -249,7 +250,7 @@ class LineDataset {
         }
         self.maxPrice = maxV
         self.minPrice = minV
-        print("计算最小值和最大值完成 max\(maxV) min \(minV)")
+//        print("计算最小值和最大值完成 max\(maxV) min \(minV)")
     }
     
     
@@ -265,6 +266,18 @@ class LineDataset {
         }
 
         return dataset[index]
+    }
+    
+    
+    /**
+     清除所有数据为初始状态
+     */
+    func clearState() {
+        self.count = 0
+        self.maxPrice = 0
+        self.minPrice = 0
+        self.startTime = Date()
+        self.dataset.removeAll()
     }
 
    /**

@@ -12,7 +12,11 @@ class DateUtil {
     
     static let inner: Inner = Inner(pattern: "yyyy-MM-dd HH:mm:ss")
     
-    static func dateToTimestarp(date: Date?) -> Int?  {
+    static func timestarpToDate(timestamp: Double) -> Date  {
+        Date(timeIntervalSince1970: TimeInterval(timestamp/1000))
+    }
+    
+    static func dateToTimestamp(date: Date?) -> Int?  {
         if let date = date {
             return Int(date.timeIntervalSince1970 * 1000)
         }

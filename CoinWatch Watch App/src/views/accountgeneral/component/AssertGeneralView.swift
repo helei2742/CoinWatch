@@ -65,7 +65,7 @@ struct SpotAssertGeneralView:View {
                 HStack {
                     DollarIcon()
                     
-                    Text(String(modelData.spotTotalValue))
+                    Text(String(modelData.spotTotalValue.coinPriceFormat()))
                         .font(.numberFont_0())
                         .foregroundStyle(.green)
                 }

@@ -33,6 +33,8 @@ struct DeepInfoCard: View {
     
     var deepArray:[DeepInfoPoint]
     
+    var whenPressData: (DeepInfoPoint?) -> Bool
+    
     var body: some View {
         GeometryReader { geo in
            
@@ -50,22 +52,15 @@ struct DeepInfoCard: View {
                     )
     
 
-                    if let rawSelectX {
+                    if let rawSelectX, whenPressData(selectedData) {
                         
-//                        RuleMark (
-//                            x: .value("selected", rawSelectX)
-//                        )
-//                        .foregroundStyle(Color.blue.opacity(0.1))
-//                        .annotation(
-//                            position: .leading, spacing: 0,
-//                            overflowResolution: .init(
-//                                x: .fit(to: .chart),
-//                                y: .disabled
-//                            )
-//                        ) {
-//                            valueSelectionPopover
-//                        }
-                    }
+                        RuleMark (
+                            x: .value("selected", rawSelectX)
+                        )
+                        .foregroundStyle(Color.blue.opacity(0.1))
+
+
+                    } 
                 }
                 .chartXScale(domain: [deepArray[0].price,
                                       deepArray[deepArray.count-1].price])
@@ -120,5 +115,13 @@ struct DeepInfoCard: View {
 
 #Preview {
     @Previewable @State var x: Double?  = nil
-    DeepInfoCard(rawSelectX: $x, deepDirection: .ASKS, deepArray: CoinInfo().deepInfo.asks)
+    DeepInfoCard(
+        rawSelectX: $x,
+        deepDirection: .ASKS,
+        deepArray: CoinInfo().deepInfo.asks,
+        whenPressData:{ selectedData in
+            print(selectedData)
+            return true
+        }
+    )
 }

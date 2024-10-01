@@ -8,15 +8,15 @@
 import Foundation
 import SwiftUI
 
-
-class ViewRouter: ObservableObject {
+@Observable
+class ViewRouter : Equatable {
     private static let sharedInstance = ViewRouter()
     
     private static var payLoadPool:[ViewNames:[String:Any]] = [:]
     
     //当前界面发生变化的时候，将观察ViewRouter的视图，主界面要得到通知和更新————所以需要用@Published属性来wrap
     //@Published 属性包装器的工作原理与 @State 属性包装器非常相似。每次分配给包装的属性的值发生变化时，每个观察中视图都会重新渲染。
-    @Published var currentView: ViewNames = .MainPage
+    var currentView: ViewNames = .MainPage
     
     var lastView: ViewNames = .MainPage
     var lastPayload: [String: Any]? = [:]
@@ -32,6 +32,10 @@ class ViewRouter: ObservableObject {
     func registePayLoadKey(viewName: ViewNames, payload: [String:Any]?){
         
         ViewRouter.payLoadPool[viewName] = payload
+    }
+    
+    static func == (left: ViewRouter, right: ViewRouter) -> Bool {
+            return left.currentView == right.currentView && left.lastView == right.lastView
     }
     
     static func routeTo(newView: ViewNames, payload: [String:Any]?=nil) {
@@ -51,5 +55,9 @@ class ViewRouter: ObservableObject {
     
     static func getInstance() -> ViewRouter {
         return sharedInstance
+    }
+    
+    static func currentView() -> ViewNames {
+        return sharedInstance.currentView
     }
 }

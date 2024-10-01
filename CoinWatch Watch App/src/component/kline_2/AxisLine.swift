@@ -71,7 +71,7 @@ struct YAxisLine: Shape {
             numbers.forEach { i in
                 let height:CGFloat = Double(i) * interval
                 
-                let printPrice = (windowHeight - height + heightOffset)/heightRatio
+//                let printPrice = (windowHeight - height + heightOffset)/heightRatio
                 
                 //刻度线
                 path.move(to: CGPoint(x: width - 10, y:height))

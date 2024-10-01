@@ -89,7 +89,7 @@ class LineDataEntry: Identifiable , Sendable{
     - Returns: Color k蜡烛的颜色
     */
     func getColor() -> Color {
-        return close > open ? Color.green : Color.red
+        return close > open ? Color("KLineColorUp") : Color("KLineColorDown")
     }
 }
 

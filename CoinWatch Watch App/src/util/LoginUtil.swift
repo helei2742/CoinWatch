@@ -17,6 +17,10 @@ class LoginUtil {
         callback(true)
     }
     
+    static func isLogin() -> Bool {
+        return true
+    }
+    
     static func saveUserLoginInfo(username: String="", paassword: String="") {
         LoginUtil.keyChain.set(username, forKey: SystemConstant.USERNAME_KEY)
         LoginUtil.keyChain.set(paassword, forKey: SystemConstant.PASSWORD_KEY)

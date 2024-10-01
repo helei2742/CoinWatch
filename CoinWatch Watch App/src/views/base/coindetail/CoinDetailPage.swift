@@ -8,30 +8,30 @@
 import SwiftUI
 
 struct CoinDetailPage: View {
-    var coinInfo: CoinInfo = CoinInfo()
     
-    init() {
-        self.defaultInit()
+    @State var coinInfo: CoinInfo
+    
+    init(base: String, quote: String) {
+        coinInfo = CoinInfo(base: base, quote: quote)
     }
     
     var body: some View {
         ZStack {
-            CoinDetailWindow()
-                .environmentObject(coinInfo)
+            CoinDetailWindow(coinInfo: $coinInfo)
             
 //            BackButton(width: 20)
-//                .position(x: 20, y: -20)
+//                .ignoresSafeArea()
+//                .position(x: 40, y: 0)
         }
         .frame(width: .infinity, height: .infinity)
-        .onAppear {
-            if let payload = ViewRouter.getPayLoad(viewName: .CoinDetail){
-                print(payload)
-                coinInfo.base = payload[SystemConstant.COIN_BASE_KEY] as! String
-                coinInfo.quote = payload[SystemConstant.COIN_QUOTE_KEY] as! String
-            } else {
-                defaultInit()
-            }
-        }
+        .gesture(
+            DragGesture()
+                .onEnded { gesture in
+                    if gesture.translation.width > 100 { // 滑动距离阈值
+                        ViewRouter.backLastView()
+                    }
+                }
+        )
     }
     
     func defaultInit() {
@@ -41,5 +41,5 @@ struct CoinDetailPage: View {
 }
 
 #Preview {
-    CoinDetailPage()
+    CoinDetailPage(base: "ETC", quote: "USDT")
 }

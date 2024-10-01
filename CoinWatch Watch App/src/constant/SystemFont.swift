@@ -9,12 +9,14 @@ import Foundation
 import SwiftUI
 
 extension Font {
-    
+    static func largeFont() -> Font {
+        return
+            Font.custom("PingFang", size: 20).weight(.bold)
+    }
     
     static func defaultFont() -> Font {
         return
             Font.custom("PingFang", size: 12).weight(.bold)
-        
     }
     
     static func numberFont_0() -> Font {

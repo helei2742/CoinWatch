@@ -10,11 +10,13 @@ import SwiftyJSON
 
 class BinanceApi {
     
-    static var baseURL: BaseURL = BaseURL.PUBLIC_DATA_API
+    static var publicURL: BaseURL = BaseURL.PUBLIC_DATA_API
     
-    static var spotApi: SpotApi = SpotApi(baseURL)
+    static var accountURL: BaseURL = BaseURL.NORMAL_API_2
     
-    static var accountApi: AccountApi = AccountApi(baseURL)
+    static var spotApi: SpotApi = SpotApi(publicURL: publicURL, accountURL: accountURL)
+    
+    static var accountApi: AccountApi = AccountApi(publicURL: publicURL, accountURL: accountURL)
     
     
     /**
@@ -26,29 +28,31 @@ class BinanceApi {
      "msg": "normal"           // "normal", "system_maintenance"
      }
      */
-    static func serverUsable() -> Bool {
-        var res = true
+    static func serverUsable(pingComplate: @escaping (Bool) -> Void) {
         BinanceApiRequest.binanceApiRequest(
-            url: baseURL.rawValue + "/sapi/v1/system/status",
+            url: accountURL.rawValue + "/sapi/v1/system/status",
             ipWeight:1,
             success: { data in
-                res = data["status"] == 0
+                pingComplate(true)
             }, failure: {error in
-                res = false
-            }
+                pingComplate(false)
+            },
+            isSignature: true
         )
-        return res
     }
     
     
 }
 
 class AccountApi {
-    var baseUrl: BaseURL
+    var publicURL: BaseURL
     
+    var accountURL: BaseURL
     
-    init(_ baseUrl: BaseURL) {
-        self.baseUrl = baseUrl
+
+    init(publicURL: BaseURL, accountURL: BaseURL) {
+        self.publicURL = publicURL
+        self.accountURL = accountURL
     }
     
     
@@ -97,7 +101,7 @@ class AccountApi {
     ) -> Void {
         
         BinanceApiRequest.binanceApiRequest(
-            url: self.baseUrl.rawValue + "/sapi/v1/accountSnapshot",
+            url: self.accountURL.rawValue + "/sapi/v1/accountSnapshot",
             ipWeight: 2400,
             parameters: [
                 "type": type,
@@ -105,7 +109,8 @@ class AccountApi {
                 "sertTime": startTime,
                 "endTime": endTime
             ],
-            success: successCall
+            success: successCall,
+            isSignature: true
         )
     }
     
@@ -144,13 +149,14 @@ class AccountApi {
     ) -> Void {
         BinanceApiRequest.binanceApiRequest(
             //            method: .post,
-            url: baseUrl.rawValue + "/sapi/v3/asset/getUserAsset",
+            url: accountURL.rawValue + "/sapi/v3/asset/getUserAsset",
             ipWeight: 5,
             body: [
                 "asset": asset,
                 "needBtcValuation": needBtcValuation
             ],
-            success: successCall
+            success: successCall,
+            isSignature: true
         )
     }
     
@@ -204,12 +210,13 @@ class AccountApi {
         successCall: @escaping (JSON) -> Void
     ) -> Void {
         BinanceApiRequest.binanceApiRequest(
-            url: baseUrl.rawValue + "/api/v3/account",
+            url: accountURL.rawValue + "/api/v3/account",
             ipWeight: 20,
             parameters: [
                 "omitZeroBalances": omitZeroBalances
             ],
-            success: successCall
+            success: successCall,
+            isSignature: true
         )
     }
 }
@@ -222,12 +229,16 @@ enum AssertType: String {
 
 
 class SpotApi {
-    var baseURL: BaseURL
     
-    init (_ baseURL: BaseURL) {
-        self.baseURL = baseURL
+    var publicURL: BaseURL
+    
+    var accountURL: BaseURL
+    
+
+    init(publicURL: BaseURL, accountURL: BaseURL) {
+        self.publicURL = publicURL
+        self.accountURL = accountURL
     }
-    
     
     /**
      获取币种最新价格
@@ -244,14 +255,27 @@ class SpotApi {
      "price": "0.07946600"
      }
      ]
-     - Returns: VOid
+     - Returns: Void
      */
-    func coinsNewPrice(symbols: [String], successCall: @escaping (JSON) -> Void) -> Void {
+    func coinsNewPrice(symbols: [String], whenComplate: @escaping (JSON?) -> Void) -> Void {
+        var str = "["
+        for s in symbols {
+            str += "\"\(s)\","
+        }
+        str.removeLast()
+        str += "]"
         
-        BinanceApiRequest.binanceApiRequest(url: baseURL.rawValue + "/api/v3/ticker/price",
-                                            ipWeight:4,
-                                            parameters:  ["symbols": symbols],
-                                            success: successCall
+        BinanceApiRequest.binanceApiRequest(
+            url: publicURL.rawValue + "/api/v3/ticker/price",
+            ipWeight:4,
+            parameters:  ["symbols": str],
+            success: { data in
+                whenComplate(data)
+            },
+            failure: { error in
+                whenComplate(nil)
+            },
+            isSignature: false
         )
     }
     
@@ -301,13 +325,14 @@ class SpotApi {
             ipWeight = 40
         }
         
-        BinanceApiRequest.binanceApiRequest(url: baseURL.rawValue + "/api/v3/ticker/24hr",
+        BinanceApiRequest.binanceApiRequest(url: publicURL.rawValue + "/api/v3/ticker/24hr",
                                             ipWeight:ipWeight,
                                             parameters: [
                                                 "symbols": symbols,
                                                 "type": type.rawValue
                                             ],
-                                            success: successCall
+                                            success: successCall,
+                                            isSignature: false
         )
     }
     
@@ -364,14 +389,15 @@ class SpotApi {
         
         
         BinanceApiRequest.binanceApiRequest(
-            url: baseURL.rawValue + "/api/v3/ticker/tradingDay",
+            url: publicURL.rawValue + "/api/v3/ticker/tradingDay",
             ipWeight:ipWeight,
             parameters: [
                 "symbols": symbols,
                 "timeZone": timeZone!,
                 "type": type!.rawValue
             ],
-            success: successCall
+            success: successCall,
+            isSignature: false
         )
     }
     
@@ -406,13 +432,14 @@ class SpotApi {
         
         
         BinanceApiRequest.binanceApiRequest(
-            url: baseURL.rawValue + "/api/v3/depth",
+            url: publicURL.rawValue + "/api/v3/depth",
             ipWeight:ipWeight,
             parameters: [
                 "symbol": symbol,
                 "limit": limit
             ],
-            success: successCall
+            success: successCall,
+            isSignature: false
         )
     }
     
@@ -430,18 +457,19 @@ class SpotApi {
     ) -> Void {
         
         BinanceApiRequest.binanceApiRequest(
-            url: baseURL.rawValue + "/api/v3/klines",
+            url: publicURL.rawValue + "/api/v3/klines",
             ipWeight:2,
             parameters: [
                 "symbol": symbol,
                 "interval": interval.rawValue.toString(),
-                "startTime": DateUtil.dateToTimestarp(date: startTime),
-                "endTime": DateUtil.dateToTimestarp(date: endTime),
+                "startTime": DateUtil.dateToTimestamp(date: startTime),
+                "endTime": DateUtil.dateToTimestamp(date: endTime),
                 "timeZone": (timeZone?.secondsFromGMT())! / 3600,
                 "limit": limit
             ],
             success: successCall,
-            failure: failureCall
+            failure: failureCall,
+            isSignature: false
         )
     }
     

@@ -42,11 +42,12 @@ struct MATypeItem: Hashable {
     var color:Color
 }
 
-enum KLineInterval: RawRepresentable {
+enum KLineInterval: RawRepresentable, CaseIterable  {
+    
     var rawValue: KLineIntervalItem {
         switch self {
-        case .s_1:
-            return KLineIntervalItem(1, .s)
+//        case .s_1:
+//            return KLineIntervalItem(1, .s)
         case .m_1:
             return KLineIntervalItem(1, .m)
         case .m_3:
@@ -77,7 +78,7 @@ enum KLineInterval: RawRepresentable {
     }
     
     typealias RawValue = KLineIntervalItem
-    case s_1
+//    case s_1
     case m_1
     case m_3
     case m_5
@@ -95,9 +96,9 @@ enum KLineInterval: RawRepresentable {
     
     init?(rawValue: KLineIntervalItem) {
         self = .d_1
-        if rawValue.interval == 1, rawValue.timeUnit == .s {
-            self = .s_1
-        }
+//        if rawValue.interval == 1, rawValue.timeUnit == .s {
+//            self = .s_1
+//        }
         if rawValue.interval == 1, rawValue.timeUnit == .m {
             self = .m_1
         }

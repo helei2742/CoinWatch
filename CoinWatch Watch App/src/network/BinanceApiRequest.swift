@@ -21,40 +21,120 @@ public class BinanceApiRequest {
         parameters: [String: Any?]? = [:],
         success : ((JSON) -> Void)? = nil,
         failure: ((BinanceAPIError) -> Void)? = nil,
-        cryptoInfo: CryptoInfo? = nil
+        cryptoInfo: CryptoInfo? = nil,
+        isSignature: Bool
     ) -> Void{
         //TODO 计算更新ipWeight
         
         
         //必要参数
-//        parameters?["timestamp"] = Date().timeIntervalSince1970
-//        parameters!["recvWindow"] = 0
-        
-        let result  = signatureRequest(body: body, parameters: parameters)
-//        let result  = (queryString: "", signature: "")
-        let queryString = result.queryString ?? ""
-        let signature = result.signature ?? ""
+        var result:(url:String, body:[String:Any])? = nil
+        if isSignature {
+            result = signatureArgsResolve(
+                method: method,
+                url: url,
+                body: body,
+                parameters: parameters
+            )
+        } else {
+            result = normalArgsResolve(
+                method: method,
+                url: url,
+                body: body,
+                parameters: parameters
+            )
+        }
+      
+        print("网络请求 \(String(describing: result))")
                 
-        
         request(
             method:method,
-            url: url + "?" + queryString + (signature.isEmpty ? "" : "&signature=" + signature),
-            body: body,
-            parameters: parameters,
+            url: result?.url ?? "",
+            body: result?.body,
             successCall: success,
             failureCall: { error in
+                print("网络请求失败，url\(result?.url ?? "")，error\(error)")
                 if let failure = failure {
                     failure(error)
                 }
             },
             isLoading: nil
         )
-    }    
+    }
+    
+    static func normalArgsResolve(
+        method: HTTPMethod = .get,
+        url:String,
+        body:[String:Any?]?,
+        parameters: [String: Any?]?
+    ) -> (url:String, body:[String:Any]) {
+        var noNilParames:[String: Any?] = [:]
+        parameters?.forEach({ (key: String, value: Any?) in
+            if value != nil {
+                noNilParames[key] = value
+            }
+        })
+        
+        var noNilBody:[String: Any] = [:]
+        body?.forEach({ (key: String, value: Any?) in
+            if value != nil {
+                noNilBody[key] = value
+            }
+        })
+        
+        let result  = signatureRequest(body: body, parameters: noNilParames)
+        let queryString = result.queryString ?? ""
+        let requestURL = url + "?" + queryString
+        
+        return (url: requestURL, body: noNilBody)
+    }
+    
+    
+    static func signatureArgsResolve(
+        method: HTTPMethod = .get,
+        url:String,
+        body:[String:Any?]?,
+        parameters: [String: Any?]?
+    ) -> (url:String, body:[String:Any]) {
+        var allParames:[String: Any?] = [
+            "timestamp": DateUtil.dateToTimestamp(date: Date()),
+            "recvWindow": 10000
+        ]
+        parameters?.forEach({ (key: String, value: Any?) in
+            if value != nil {
+                allParames[key] = value
+            }
+        })
+
+        
+        let result  = signatureRequest(body: body, parameters: allParames, SK: CryptoInfo.getSK())
+        let queryString = result.queryString ?? ""
+        let signature = result.signature ?? ""
+                
+        var requestURL = url + "?" + queryString
+        
+        var signatureBody:[String: Any] = [:]
+        body?.forEach({ (key: String, value: Any?) in
+            if value != nil {
+                signatureBody[key] = value
+            }
+        })
+        
+        if method == .get {
+            requestURL += "&signature=" + signature
+        }
+        if method == .post {
+            signatureBody["signature"] = signature
+        }
+        
+        return (url: requestURL, body: signatureBody)
+    }
+    
     
     static func signatureRequest(
         body:[String:Any?]? = [:],
         parameters: [String: Any?]? = [:],
-        cryptoInfo: CryptoInfo? = nil
+        SK: String? = nil
     ) -> (signature: String?, queryString: String?) {
         var queryString = ""
         //签名
@@ -86,7 +166,10 @@ public class BinanceApiRequest {
             queryString = str
         }
         
-       // return (hmacSHA256(message: sionedString, key: cryptoInfo!.secretKey), queryString)
+        if let sk = SK {
+            return (hmacSHA256(message: sionedString, key: sk), queryString)
+        }
+        
         return ("", queryString)
     }
   
@@ -117,12 +200,11 @@ public class BinanceApiRequest {
         if isLoading == true {
             
         }
-        
-        print(url)
-        
+                
         let headers:HTTPHeaders =  [
             "Content-Type":"application/json;charset=UTF-8",
-            "Accept":"application/json"
+            "Accept":"application/json",
+            "X-MBX-APIKEY": CryptoInfo.getAK()
         ]
         
         var nonNilBody:[String:Any] = [:]
@@ -130,6 +212,7 @@ public class BinanceApiRequest {
             nonNilBody = body.compactMapValues { $0 }
         }
         
+        print("body - \(nonNilBody)")
         AF.request(
             url,
             method: method,
@@ -141,12 +224,13 @@ public class BinanceApiRequest {
         .responseData { res in
             switch res.result {
             case .success(let value) :
+                print("url -- \(url), request succeess")
                 let json = try? JSON(data: value)
                 if successCall != nil {
                     successCall!(json!)
                 }
             case .failure(let error):
-                print(error)
+                print("url -- \(url), request error \(error)")
                 let eCode = res.response?.statusCode ?? 500
                 var errorType = BinanceAPIError.ERROR_UNKNOW
                 if eCode == 403 {

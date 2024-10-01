@@ -8,51 +8,51 @@
 import Foundation
 import SwiftUI
 
-//protocol ContainerView: View {
-//    associatedtype Content
-//    init(content: @escaping () -> Content)
-//}
-//
-//extension ContainerView {
-//    init(@ViewBuilder _ content: @escaping () -> Content) {
-//        self.init(content: content)
-//    }
-//}
-class NatificationBar :ObservableObject {
-    @Published var isShowBar:Bool
+
+@Observable
+class NatificationBar {
+    private static var instance: NatificationBar = NatificationBar(isShowBar: false)
     
-    @Published var dynamicContent: AnyView
+    var isShowBar:Bool
     
-    init(
-        isShowBar: Bool,
-        dynamicContent: AnyView
+    var printContent: [String] = []
+    
+    private init(
+        isShowBar: Bool
     ) {
-        self.dynamicContent = dynamicContent
         self.isShowBar = isShowBar
     }
 
     @ViewBuilder
     func content() -> some View {
         if isShowBar {
-            dynamicContent
+            LazyVStack {
+                ForEach(printContent, id: \.endIndex) { content in
+                    Text(content)
+                }
+                Spacer()
+            }
+            .background(Color("NormalBGColor").opacity(0.5))
+            .clipShape(
+                RoundedRectangle(cornerRadius: 5)
+            )
         } else {
             EmptyView()
         }
-        
     }
 
-    func printContent(anyView: AnyView) -> Void {
-        print("123")
-        dynamicContent = anyView
+    func printContent(content: [String]) -> Void {
+        printContent = content
         isShowBar = true
     }
     
-    func closeBar() -> Void {
+    func close() {
+        printContent.removeAll()
         isShowBar = false
     }
-}
-
-
-#Preview{
-
+    
+    
+    static func getInstance() -> NatificationBar {
+        return instance
+    }
 }

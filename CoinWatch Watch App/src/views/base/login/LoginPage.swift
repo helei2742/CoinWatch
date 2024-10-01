@@ -11,10 +11,10 @@ struct LoginPage:View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showingAlert = false
-
+    
     var body: some View {
         NavigationView {
-            ScrollView {
+            VStack{
                 TextField("用户名/邮箱", text: $username)
                     .padding() // 添加一些内边距
                     .offset(x: 0, y: 20)
@@ -73,7 +73,6 @@ struct LoginPage:View {
                         .background(Color(.red))
                     }
                 }
-                
             }
             .frame(height: 250)
             // .background(Color(.blue))

@@ -46,14 +46,14 @@ struct SimpleAreaChart: View {
             Chart(modelData.spotTotalValueDayHistory, id: \.date) { element in
                 PointMark (
                     x: .value("日期", element.date, unit: .day),
-                    y: .value("美元", element.spotTotalValue)
+                    y: .value("美元", element.spotTotalValue.coinPriceFormat())
                 )
                 .foregroundStyle(Color.orange)
                 .symbolSize(8)
                 
                 AreaMark (
                     x: .value("日期", element.date, unit: .day),
-                    y: .value("美元", element.spotTotalValue)
+                    y: .value("美元", element.spotTotalValue.coinPriceFormat())
                 )
                 .foregroundStyle(Color.orange.opacity(0.6))
                 

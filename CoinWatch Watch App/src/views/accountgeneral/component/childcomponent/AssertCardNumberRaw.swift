@@ -19,7 +19,7 @@ struct AssertCardNumberRaw: View {
         HStack {
             HStack(spacing: 0) {
                 
-                Text(String(number))
+                Text(String(number.coinPriceFormat()))
                 
                 ArrowIcon(judge: number - lastNumber)
             }

@@ -7,13 +7,16 @@
 
 import SwiftUI
 
-
-class CoinInfo: Identifiable, ObservableObject{
+/**
+    用于在CoinDetailPage里显示的信息数据
+ */
+@Observable
+class CoinInfo: Identifiable{
     
-    @Published var base: String
-    @Published var quote: String
+    var base: String
+    var quote: String
     
-    @Published var deepInfo: DeepInfo
+    var deepInfo: DeepInfo
     
     init(
         base:String = "BTC",

@@ -14,7 +14,6 @@ struct DeepInfoCard: View {
     
     @State private var showingPopover = false
     
-    
     var selectedData: DeepInfoPoint? {
         get {
             if let rawSelectX {
@@ -29,47 +28,59 @@ struct DeepInfoCard: View {
         }
     }
     
+    
     var deepDirection:DeepDirection
     
     var deepArray:[DeepInfoPoint]
     
+   
     var whenPressData: (DeepInfoPoint?) -> Bool
+    
     
     var body: some View {
         GeometryReader { geo in
-           
-                Chart(deepArray, id: \.price){ element in
-                    PointMark (
-                        x: .value("price", element.price),
-                        y: .value("vol", element.volume)
-                    )
-                    .foregroundStyle(chartColor())
-                    .symbolSize(8)
+            if !deepArray.isEmpty {
+                Chart(deepDirection == DeepDirection.ASKS ? deepArray : deepArray.sorted(by: { $0.price < $1.price
+                }), id: \.price){ element in
+//                    PointMark (
+//                        x: .value("price", element.price),
+//                        y: .value("vol", element.volume)
+//                    )
+//                    .foregroundStyle(chartColor())
+//                    .symbolSize(8)
                     
                     LineMark(
                         x: .value("price", element.price),
                         y: .value("vol", element.volume)
                     )
-    
-
+                    .lineStyle(StrokeStyle(lineWidth: 1))
+                    
                     if let rawSelectX, whenPressData(selectedData) {
                         
                         RuleMark (
                             x: .value("selected", rawSelectX)
                         )
                         .foregroundStyle(Color.blue.opacity(0.1))
-
-
-                    } 
+                        .annotation(
+                            position: .top, spacing: 0,
+                            overflowResolution: .init(
+                                x: .fit(to: .chart),
+                                y: .disabled
+                            )
+                        ) {
+                            valueSelectionPopover
+                        }
+                    }
                 }
                 .chartXScale(domain: [deepArray[0].price,
                                       deepArray[deepArray.count-1].price])
                 .chartYAxis(.hidden)
                 .chartXAxis(.hidden)
-                .foregroundStyle(chartColor().opacity(0.5))
+                .foregroundStyle(chartColor())
                 .chartXSelection(value: $rawSelectX)
                 .frame(width: geo.size.width, height: geo.size.height)
                 .background(chartColor().opacity(0.2))
+            }
         }
     }
     
@@ -107,7 +118,7 @@ struct DeepInfoCard: View {
         switch deepDirection {
         case .ASKS:
             return .green
-        case .DIDS:
+        case .BIDS:
             return .red
         }
     }
@@ -118,7 +129,7 @@ struct DeepInfoCard: View {
     DeepInfoCard(
         rawSelectX: $x,
         deepDirection: .ASKS,
-        deepArray: CoinInfo().deepInfo.asks,
+        deepArray: CoinInfo().asks,
         whenPressData:{ selectedData in
             print(selectedData)
             return true

@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SwiftyJSON
+
 
 /**
     用于在CoinDetailPage里显示的信息数据
@@ -16,120 +18,67 @@ class CoinInfo: Identifiable{
     var base: String
     var quote: String
     
-    var deepInfo: DeepInfo
-    
+    var bids: [DeepInfoPoint]
+    var asks: [DeepInfoPoint]
+        
     init(
         base:String = "BTC",
-        quote:String = "USDT",
-        deepInfo: DeepInfo = DeepInfo()
+        quote:String = "USDT"
     ) {
         
         self.base = base
         self.quote = quote
-        self.deepInfo = deepInfo
         
-        let asks =  [
-            [
-                "62614.01000000",
-                "2.89985000"
-            ],
-            [
-                "62614.02000000",
-                "0.04700000"
-            ],
-            [
-                "62614.04000000",
-                "0.00010000"
-            ],
-            [
-                "62614.05000000",
-                "0.00359000"
-            ],
-            [
-                "62614.21000000",
-                "0.00010000"
-            ],
-            [
-                "62614.28000000",
-                "0.00010000"
-            ],
-            [
-                "62614.35000000",
-                "0.00010000"
-            ],
-            [
-                "62614.41000000",
-                "0.00010000"
-            ],
-            [
-                "62614.43000000",
-                "0.00010000"
-            ],
-            [
-                "62614.50000000",
-                "0.04410000"
-            ]
-        ]
+        self.asks =  []
         
-        let bids = [
-            [
-                "00000000",
-                "2.04906000"
-            ],
-            [
-                "62613.99000000",
-                "0.01391000"
-            ],
-            [
-                "62613.98000000",
-                "0.00900000"
-            ],
-            [
-                "62613.97000000",
-                "0.00010000"
-            ],
-            [
-                "62613.96000000",
-                "0.00927000"
-            ],
-            [
-                "62613.94000000",
-                "0.00022000"
-            ],
-            [
-                "62613.93000000",
-                "0.00010000"
-            ],
-            [
-                "62613.81000000",
-                "0.00010000"
-            ],
-            [
-                "62613.80000000",
-                "0.00010000"
-            ],
-            [
-                "62613.78000000",
-                "0.11811000"
-            ]
-        ]
+        self.bids = []
+    }
+    
+    
+    /**
+     网络请求获取深度信息
+     */
+    func loadDeepInfo(whenComplate: @escaping (Bool) -> Void) {
+        print("获取深度信息中。。。。。\(base)-\(quote)")
         
+        BinanceApi.spotApi.deepInfo(
+            symbol: CommonUtil.generalCoinSymbol(base: base, quote: quote),
+            limit: 50
+        ) { [self] data in
+                if data == nil {
+                    whenComplate(false)
+                    return
+                }
+                let bidsJson = data!["bids"]
+                let asksJson = data!["asks"]
+                
+                
+                self.generateDeepJSONToArray(asksJson: asksJson, bidsJson: bidsJson)
+                
+            print("获取深度信息完毕。。。。。\(self.base)-\(quote)")
+                whenComplate(true)
+            }
+    }
+    
+    
+    /**
+        解析json，放入asks 和 bids中
+     */
+    func generateDeepJSONToArray(asksJson:JSON, bidsJson:JSON) {
         
-        for pair in asks {
-            self.deepInfo.asks.append(DeepInfoPoint(pair[0], pair[1]))
-        }
+        self.asks.removeAll()
+        asksJson.array?.forEach({ itemJSON in
+            self.asks.append(DeepInfoPoint(itemJSON[0].stringValue, itemJSON[1].stringValue))
+        })
         
-        for pair in bids {
-            self.deepInfo.bids.append(DeepInfoPoint(pair[0], pair[1]))
-        }
+        self.bids.removeAll()
+        bidsJson.array?.forEach({ itemJSON in
+            self.bids.append(DeepInfoPoint(itemJSON[0].stringValue, itemJSON[1].stringValue))
+        })
+        
     }
 }
 
-
-struct DeepInfo {
-    var bids: [DeepInfoPoint] = []
-    var asks: [DeepInfoPoint] = []
-}
 
 class DeepInfoPoint {
     var price: Double = 1
@@ -140,4 +89,6 @@ class DeepInfoPoint {
         self.volume = volume
     }
 }
+
+
 

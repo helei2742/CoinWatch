@@ -8,82 +8,58 @@
 import SwiftUI
 
 struct CoinDetailWindow: View {
+    /**
+    该页面显示币种信息的数据，包含深度数据
+     */
     @Binding var coinInfo: CoinInfo
+    
+    /**
+     弹出框
+     */
     var natificationBar: NatificationBar = NatificationBar.getInstance()
     
+    /**
+     是否全屏
+     */
     @State var isFullScreen: Bool = false
     
+    /**
+     是否在加载深度信息
+     */
+    @State var isLoadingDeep: Bool = false
+    
+    /**
+     当前选中的
+     */
     @State var selectAsks: Double? = nil
+    
+    /**
+     当前选中的
+     */
     @State var selectDids: Double? = nil
     
+    
+    /**
+     k线图表显示的类型
+     */
     @State var chartPrintState: ChartPrintState = ChartPrintState.K_MA_LINE
+    
+    /**
+     k线间隔
+     */
     @State var kLineInterval: KLineInterval = .d_1
+    
+    
     
     var body: some View {
         GeometryReader { geometry in
             
             HStack(spacing:2) {
-                VStack(spacing:0){
-                    //图标和名称
-                    //                    CoinImage(imageUrl: CommonUtil.getCoinLogoImageUrl(base: coinInfo.base))
-                    //                    .frame(width: geometry.size.width*0.12,height: geometry.size.width*0.12)
-                    //                    .edgesIgnoringSafeArea(.top)
-                    //                    .background(.red)
-                    
-                    VStack {
-                        Spacer()
-                        
-                        Text("\(coinInfo.base)")
-                            .padding(0)
-                            .font(.largeFont())
-                            .lineLimit(1)
-                        
-                        HStack{
-                            Text("成交量")
-                                .font(.littleFont())
-                                .padding(0)
-                                .lineLimit(1)
-                            Text("200万")
-                                .font(.littleFont())
-                                .padding(0)
-                                .lineLimit(1)
-                        }
-                        
-                        HStack{
-                            Text("净流入")
-                                .font(.littleFont())
-                                .padding(0)
-                                .lineLimit(1)
-                            Text("100万")
-                                .font(.littleFont())
-                                .padding(0)
-                                .lineLimit(1)
-                        }
-                    }
-                    .frame(width: geometry.size.width*0.3)
-                    .padding(.bottom)
-                    .background(.blue)
-                    
-                    //深度图
-                    DeepInfoCard(
-                        rawSelectX: $selectAsks,
-                        deepDirection: .ASKS,
-                        deepArray: coinInfo.deepInfo.asks,
-                        whenPressData: printDeepInfo
-                    )
-                    
-                    DeepInfoCard(
-                        rawSelectX: $selectDids,
-                        deepDirection: .DIDS,
-                        deepArray: coinInfo.deepInfo.bids,
-                        whenPressData: printDeepInfo
-                    )
-                    Spacer()
-                }
-                .ignoresSafeArea()
-                .padding(.trailing, 1)
-                .frame(width: geometry.size.width*0.3,height:geometry.size.height)
-                .background(Color("NormalBGColor").opacity(0.6))
+                
+                //坐标区域
+                nameAndDeepGraph
+                    .frame(width: geometry.size.width*0.3,height:geometry.size.height)
+                    .background(Color("NormalBGColor").opacity(0.6))
                 
                 VStack { //右边区域
                     //顶部工具栏
@@ -104,21 +80,107 @@ struct CoinDetailWindow: View {
                             chartPrintState
                         }
                     )
-                    //        .frame(height: geometry.size.height * 0.7)
                     
-                    //底部挂单情况
-                    VStack{
-                        Text("显示用户仓位和挂单")
-                    }
-                    .frame(height: geometry.size.height * 0.2)
-                    .background(Color("NormalBGColor").opacity(0.6))
+//                    //底部挂单情况
+//                    VStack{
+//                        Text("显示用户仓位和挂单")
+//                    }
+//                    .frame(height: geometry.size.height * 0.2)
+//                    .background(Color("NormalBGColor").opacity(0.6))
                 }
                 //                .ignoresSafeArea()
                 .frame(width: geometry.size.width*0.7,height:geometry.size.height)
             }
             .font(.defaultFont())
+            .onAppear{
+                isLoadingDeep = true
+                
+                coinInfo.loadDeepInfo { res in
+                    print("loadsuccess")
+                    isLoadingDeep = false
+                }
+            }
         }
     }
+    
+    /**
+    名字和深度图
+     */
+    @ViewBuilder
+    var nameAndDeepGraph: some View {
+        VStack(spacing:0){
+            //图标和名称
+            //                    CoinImage(imageUrl: CommonUtil.getCoinLogoImageUrl(base: coinInfo.base))
+            //                    .frame(width: geometry.size.width*0.12,height: geometry.size.width*0.12)
+            //                    .edgesIgnoringSafeArea(.top)
+            //                    .background(.red)
+            
+            VStack {
+                Spacer()
+                
+                Text("\(coinInfo.base)")
+                    .padding(0)
+                    .font(.largeFont())
+                    .lineLimit(1)
+                Spacer()
+//                HStack{
+//                    Text("成交量")
+//                        .font(.littleFont())
+//                        .padding(0)
+//                        .lineLimit(1)
+//                    Text("200万")
+//                        .font(.littleFont())
+//                        .padding(0)
+//                        .lineLimit(1)
+//                }
+//                
+//                HStack{
+//                    Text("净流入")
+//                        .font(.littleFont())
+//                        .padding(0)
+//                        .lineLimit(1)
+//                    Text("100万")
+//                        .font(.littleFont())
+//                        .padding(0)
+//                        .lineLimit(1)
+//                }
+            }
+            .padding(.bottom)
+            
+ 
+                //深度图
+            DeepInfoCard(
+                rawSelectX: $selectAsks,
+                deepDirection: .ASKS,
+                deepArray: coinInfo.asks,
+                whenPressData: printDeepInfo
+            )
+            .overlay {
+                if isLoadingDeep {
+                    ProgressView()
+                }
+            }
+            
+            DeepInfoCard(
+                rawSelectX: $selectDids,
+                deepDirection: .BIDS,
+                deepArray: coinInfo.bids,
+                whenPressData: printDeepInfo
+            )
+            .overlay {
+                if isLoadingDeep {
+                    ProgressView()
+                }
+            }
+            
+
+            Spacer()
+        }
+        .ignoresSafeArea()
+        .padding(.trailing, 1)
+    }
+    
+    
     
     @ViewBuilder
     var topToolbar: some View {

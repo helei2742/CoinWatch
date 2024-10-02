@@ -30,6 +30,11 @@ struct KLineChart: View {
     
     
     /**
+    额外区域的高度
+     */
+    @State private var extraAreaHeight: Double = 0
+    
+    /**
      当前选中的数据
      */
     @State private var selectedPosition:CGPoint? = .zero
@@ -94,6 +99,17 @@ struct KLineChart: View {
     @State var scrollAreaHeight: Double = 0
     
     /**
+    当前窗口最左边位置在原数据数组的下标
+     */
+    @State var windowStartIndex: Int?
+    
+    /**
+    当前窗口最右边位置在原数组的下标
+     */
+    @State var windowEndIndex: Int?
+    
+    
+    /**
      组件item的高度比例，因为y轴是价格，所以表示单位价格的长度 height / (maxPrice - minPrice)
      */
     @State var heightRatio: Double = 1
@@ -122,8 +138,6 @@ struct KLineChart: View {
     /**
      当前显示哪些图表
      */
-    //    var chartPrintState: ChartPrintState = ChartPrintState.K_MA_LINE
-    
     var getPrintState: () -> ChartPrintState = {
         ChartPrintState.K_MA_LINE
     }
@@ -156,37 +170,52 @@ struct KLineChart: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                //背景显示的字
-                Text(dataset.symbol)
-                    .font(.title)
-                    .foregroundStyle(Color("SystemFontColor").opacity(0.4))
-                
-                
-                //加载动画
-                if isLoadingKLineData {
-                    ProgressView()
-                }
-                
-                if dataset.count > 0 {
-                    kLineScrollArea
-                        .frame(maxWidth: .infinity, maxHeight: .infinity
-                        )
-                        .background(Color("SystemBGColor").opacity(0.5))
-                }
-                
-                // 显示十字线以及按住的KLineItem的信息
-                if isLineItemLongPress { //在长按
-                    if selectedPosition != .zero {
-                        longPressPrintView
+            VStack(spacing:0){
+                ZStack {
+                    //背景显示的字
+                    Text(dataset.symbol)
+                        .font(.title)
+                        .foregroundStyle(Color("SystemFontColor").opacity(0.4))
+                    
+                    
+                    //加载动画
+                    if isLoadingKLineData {
+                        ProgressView()
+                    }
+                    
+                    if dataset.count > 0 {
+                        kLineScrollArea
+                            .frame(maxWidth: .infinity, maxHeight: .infinity
+                            )
+                            .background(Color("SystemBGColor").opacity(0.5))
+                    }
+                    
+                    // 显示十字线以及按住的KLineItem的信息
+                    if isLineItemLongPress { //在长按
+                        if selectedPosition != .zero {
+                            longPressPrintView
+                        }
                     }
                 }
+                ExtraArea(
+                    lineItemWidth: $lineItemWidth,
+                    scrollAreaWidth: $scrollAreaWidth,
+                    scrollAreaOffset: $scrollViewOffset,
+                    lineDataList: $dataset.dataset,
+                    windowStartIndex: $windowStartIndex,
+                    windowEndIndex: $windowEndIndex
+                )
+                .frame(width: windowWidth, height: extraAreaHeight)
+                .background(.yellow)
             }
             .onAppear{
                 //设置K线视图宽度、高度
                 windowWidth = geometry.size.width
                 windowHeight = geometry.size.height
+                extraAreaHeight = windowHeight / 3
+                
                 lineItemWidth = windowWidth / Double(viewKLineItemCount) - marginOfLineItem
+                
                 scrollAreaWidth = windowWidth
                 scrollAreaHeight = windowHeight
                 
@@ -196,18 +225,16 @@ struct KLineChart: View {
                 
                 //首次，加载数据，滚动到最后
                 loadLineDataNetwork(beforeSuccessComplate: {
-                    if dataset.count >= viewKLineItemCount {
-                        position.scrollTo(x: scrollAreaWidth)
-                    }
+                    scrollToLast()
                 })
             }
             .onChange(of: klineInterval) { _, new in //监听k线种类的改变，手动刷新
                 dataset.kLineInterval = new
+                windowStartIndex = nil
+                windowEndIndex = nil
                 
                 loadLineDataNetwork(beforeSuccessComplate: {
-//                    if dataset.count >= viewKLineItemCount {
-                    position.scrollTo(edge: .trailing)
-//                    }
+                    scrollToLast()
                 })
             }
         }
@@ -485,14 +512,6 @@ struct KLineChart: View {
             width: scrollAreaWidth,
             height: scrollAreaHeight
         )
-        .onAppear {
-            //首次，加载数据，滚动到最后
-//            loadLineDataNetwork(beforeSuccessComplate: {
-//                if dataset.count >= viewKLineItemCount {
-//                    position.scrollTo(x: scrollAreaWidth)
-//                }
-//            })
-        }
     }
     
     /**
@@ -514,6 +533,7 @@ struct KLineChart: View {
                 }
             )
             .onChange(of: scrollViewOffset) { old, new in
+                print("old \(old), new \(new)")
                 guard let new else { return }
                 var newOffset = new
                 if newOffset < 0 {
@@ -522,7 +542,6 @@ struct KLineChart: View {
                 if newOffset > scrollAreaWidth {
                     newOffset = scrollAreaWidth
                 }
-                //                print("用户滚动偏移：\(new.formatted())")
                 
                 whenOffsetChange(newOffset: newOffset)
             }
@@ -590,9 +609,9 @@ struct KLineChart: View {
         print("new scroll offset \(newOffset)")
         
         //剩余没展示的点不足以覆盖整个窗口，再次尝试请求数据，需要再获取k线数据
-        if dataset.count >= viewKLineItemCount ,
-           newOffset < (Double(viewKLineItemCount) * lineItemWidth) ,
-           !isLoadingKLineData {
+        if windowStartIndex != nil &&
+            windowStartIndex! < viewKLineItemCount
+        {
             
             isLoadingKLineData = true
             
@@ -601,12 +620,28 @@ struct KLineChart: View {
             
             //网络请求更新数据
             loadLineDataNetwork(beforeSuccessComplate: {
-                position.scrollTo(point: CGPoint(x: Double(dataset.count - oldCount)*lineItemWidth + oldOffset , y: 0))
+                if oldCount == 0 { //第一次
+                    scrollToLast()
+                } else {
+                    position.scrollTo(x: Double(dataset.count - oldCount)*lineItemWidth + oldOffset)
+                }
             })
         }
         
         
-        updateHeightRatioAndOffset(windowStart: Int(newOffset/lineItemWidth))
+        //更新窗口
+        if newOffset >= 0 {
+            windowStartIndex = Int(newOffset/lineItemWidth)
+            var end = Int((newOffset + windowWidth)/lineItemWidth)
+            windowEndIndex = end >= dataset.count ? end - 1: end
+        } else {
+            windowStartIndex = nil
+            windowEndIndex = nil
+        }
+       
+        
+        //更新高度比和偏移
+        updateHeightRatioAndOffset(windowStart: windowStartIndex!)
     }
     
     /**
@@ -678,6 +713,10 @@ struct KLineChart: View {
         return dataset.getIndex(index)
     }
     
+    func scrollToLast() {
+        print("滚动到 - \(lineItemWidth * Double(dataset.count) - windowWidth)")
+        position.scrollTo(x: lineItemWidth * Double(dataset.count) + windowWidth)
+    }
 }
 
 

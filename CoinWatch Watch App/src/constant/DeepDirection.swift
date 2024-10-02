@@ -10,5 +10,5 @@ import Foundation
 
 enum DeepDirection: String {
     case ASKS = "asks"
-    case DIDS = "dids"
+    case BIDS = "bids"
 }

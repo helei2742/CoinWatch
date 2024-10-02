@@ -412,7 +412,7 @@ class SpotApi {
     func deepInfo (
         symbol: String,
         limit: Int? = 10,
-        successCall: @escaping (JSON) -> Void
+        whenComplate: @escaping (JSON?) -> Void
     ) -> Void {
         var ipWeight = 250
         if let limit = limit {
@@ -438,7 +438,12 @@ class SpotApi {
                 "symbol": symbol,
                 "limit": limit
             ],
-            success: successCall,
+            success: { data in
+                whenComplate(data)
+            },
+            failure: { dat in
+                whenComplate(nil)
+            },
             isSignature: false
         )
     }

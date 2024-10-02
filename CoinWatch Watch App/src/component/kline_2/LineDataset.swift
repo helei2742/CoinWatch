@@ -34,7 +34,7 @@ class LineDataset {
     /**
         一次网络请求价值的k线数据限制
      */
-    var onceLoadLineDataCountLimit:Int = 30
+    var onceLoadLineDataCountLimit:Int = 45
     
     /**
         具体的数据

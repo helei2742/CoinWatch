@@ -18,9 +18,8 @@ struct CoinWatch_Watch_AppApp: App {
 //                bollConfig: (average: 21, n: 2)
 //            )
             
-//            CoinDetailWindow().environmentObject(CoinInfo())
-            
-            MainView()
+            CoinDetailPage(base: "BNB", quote: "USDT")
+//            MainView()
         }
     }
 }

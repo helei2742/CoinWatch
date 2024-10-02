@@ -30,6 +30,7 @@ class LineDataset {
     **/
     var kLineInterval: KLineInterval
     
+    
     /**
         一次网络请求价值的k线数据限制
      */
@@ -128,7 +129,6 @@ class LineDataset {
      */
     func loadLineData(whenComplate: @escaping (Bool) -> Void) {
         loadLineData(
-            startTime: getStartTime(endTime: startTime),
             limit: onceLoadLineDataCountLimit,
             actionOfNewData: { newData in
                 self.dataset.append(contentsOf: newData)
@@ -139,9 +139,11 @@ class LineDataset {
 
     /**
      加载数据
+     
+        有startTime时。请求按照startTime，否则采用内部维护的startTime
      */
     func loadLineData(
-        startTime: Date,
+        startTime: Date? = nil,
         limit: Int,
         actionOfNewData: @escaping ([LineDataEntry]) -> Void,
         whenComplate: @escaping (Bool) -> Void
@@ -166,9 +168,13 @@ class LineDataset {
         BinanceApi.spotApi.kLineData(
             symbol: symbol,
             interval: kLineInterval,
-            startTime: startTime,
+            startTime: startTime ?? getStartTime(endTime: self.startTime),
             limit: limit,
-            successCall: { data in
+            successCall: { (data, interval) in
+                if interval != self.kLineInterval { //得到的频率不一致,丢弃
+                    whenComplate(false)
+                    return
+                }
                 //更新dataset
                 let newData = self.generalJSONToLineDataEntryArray(data: data).sorted(by:{$0.openTime > $1.openTime})
                 if newData.count == 0 {
@@ -176,7 +182,20 @@ class LineDataset {
                 }
 
                 actionOfNewData(newData)
+                
+                //排序去重
                 self.dataset.sort(by:{$0.openTime < $1.openTime})
+                var seen = [LineDataEntry]()
+                let uniqueArray = self.dataset.filter { item in
+                    if seen.contains(item) {
+                        return false
+                    } else {
+                        seen.append(item)
+                        return true
+                    }
+                }
+                
+                self.dataset = uniqueArray
 
                 //更新count，max，min等
                 self.count = self.dataset.count
@@ -220,7 +239,8 @@ class LineDataset {
                     open: open,
                     close: close,
                     high: high,
-                    low: low
+                    low: low,
+                    volume: volume
                 )
             }
         }
@@ -256,7 +276,11 @@ class LineDataset {
     
     
     func getStartTime(endTime:Date) -> Date{
-        return DateUtil.calDate(from: endTime, days: -1 * 30, timeUnit: kLineInterval.rawValue.timeUnit) ?? Date()
+        return DateUtil.calDate(
+            from: endTime,
+            count: -1 * onceLoadLineDataCountLimit * kLineInterval.rawValue.interval,
+            timeUnit: kLineInterval.rawValue.timeUnit
+        ) ?? Date()
     }
 
     func getIndex(_ index:Int) -> LineDataEntry? {
@@ -273,11 +297,13 @@ class LineDataset {
      清除所有数据为初始状态
      */
     func clearState() {
-        self.count = 0
+        
         self.maxPrice = 0
         self.minPrice = 0
         self.startTime = Date()
         self.dataset.removeAll()
+        self.count = 0
+        self.isEndOfDataset = false
     }
 
    /**
@@ -310,6 +336,9 @@ class LineDataset {
         maInterval:Int = 21,
         n: Double = 2
     ) -> Void {
+        if maInterval >= dataset.count {
+            return
+        }
         for i in maInterval-1...dataset.count-1 {
             let periodPrices = dataset[i-maInterval+1...i].map{$0.close}
             let sum = periodPrices.reduce(0, +)

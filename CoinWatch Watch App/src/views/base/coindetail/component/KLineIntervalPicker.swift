@@ -20,10 +20,8 @@ struct KLineIntervalPicker: View {
             }
         } label: {
             Text(kLineInterval.rawValue.toString())
-//                .font(.littleFont())
                 .frame(width: 35, height: 20)
                 .foregroundStyle(.black)
-//                .padding()
                 .multilineTextAlignment(.center)
                 .background(Color("MetricIconBGColor"))
         }

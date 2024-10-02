@@ -224,13 +224,13 @@ public class BinanceApiRequest {
         .responseData { res in
             switch res.result {
             case .success(let value) :
-                print("url -- \(url), request succeess")
+//                print("url -- \(url), request succeess")
                 let json = try? JSON(data: value)
                 if successCall != nil {
                     successCall!(json!)
                 }
             case .failure(let error):
-                print("url -- \(url), request error \(error)")
+                print("url -- \(url), request error \(error),   \n\(res)")
                 let eCode = res.response?.statusCode ?? 500
                 var errorType = BinanceAPIError.ERROR_UNKNOW
                 if eCode == 403 {

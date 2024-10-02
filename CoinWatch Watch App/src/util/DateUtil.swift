@@ -28,26 +28,26 @@ class DateUtil {
     }
     
     static func dateToStr(date: Date) -> String {
-        return inner.dayFormatter.string(from: date)
+        return inner.dateFormatter.string(from: date)
     }
     
-    static func calDate(from date: Date, days: Int, timeUnit: TimeUnit) -> Date? {
+    static func calDate(from date: Date, count: Int, timeUnit: TimeUnit) -> Date? {
         // 使用当前日历对象来进行日期计算
         let calendar = Calendar.current
         // 通过 subtracting 天数来获取目标日期
         switch timeUnit {
         case .s:
-            return calendar.date(byAdding: .second, value: days, to: date)
+            return calendar.date(byAdding: .second, value: count, to: date)
         case .m:
-            return calendar.date(byAdding: .minute, value: days, to: date)
+            return calendar.date(byAdding: .minute, value: count, to: date)
         case .h:
-            return calendar.date(byAdding: .hour, value: days, to: date)
+            return calendar.date(byAdding: .hour, value: count, to: date)
         case .d:
-            return calendar.date(byAdding: .day, value: days, to: date)
+            return calendar.date(byAdding: .day, value: count, to: date)
         case .w:
-            return calendar.date(byAdding: .weekday, value: days, to: date)
+            return calendar.date(byAdding: .weekday, value: count, to: date)
         case .M:
-            return calendar.date(byAdding: .month, value: days, to: date)
+            return calendar.date(byAdding: .month, value: count, to: date)
         }
     }
     

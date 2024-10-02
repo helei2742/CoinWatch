@@ -1,6 +1,10 @@
 
-[linux]$ echo -n "recvWindow=0&timestamp=1727786302.730694" | openssl dgst -sha256 -hmac "9zpXD991bjGGtU6lHEX9VCs9YX2Du7gW3fCBE9SPNCz177yhCFZ74rN64I4wGRrh"
+[linux]$ echo -n "timestamp=1727843492784&omitZeroBalances=true&recvWindow=10000" | openssl dgst -sha256 -hmac "9zpXD991bjGGtU6lHEX9VCs9YX2Du7gW3fCBE9SPNCz177yhCFZ74rN64I4wGRrh"
 
 
 45bfd70cdd924bd23970d69b0de1b8ecddd6c97996d660a262f60d8d4053af36
 45bfd70cdd924bd23970d69b0de1b8ecddd6c97996d660a262f60d8d4053af36
+
+
+7d46bd440bf35e76a10317888e8b6a64969081559e5f4a52bd2fa75d8d434162
+7d46bd440bf35e76a10317888e8b6a64969081559e5f4a52bd2fa75d8d434162

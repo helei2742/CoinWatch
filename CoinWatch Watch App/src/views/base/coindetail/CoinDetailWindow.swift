@@ -11,6 +11,8 @@ struct CoinDetailWindow: View {
     @Binding var coinInfo: CoinInfo
     var natificationBar: NatificationBar = NatificationBar.getInstance()
     
+    @State var isFullScreen: Bool = false
+    
     @State var selectAsks: Double? = nil
     @State var selectDids: Double? = nil
     
@@ -23,10 +25,10 @@ struct CoinDetailWindow: View {
             HStack(spacing:2) {
                 VStack(spacing:0){
                     //图标和名称
-//                    CoinImage(imageUrl: CommonUtil.getCoinLogoImageUrl(base: coinInfo.base))
-//                    .frame(width: geometry.size.width*0.12,height: geometry.size.width*0.12)
-//                    .edgesIgnoringSafeArea(.top)
-//                    .background(.red)
+                    //                    CoinImage(imageUrl: CommonUtil.getCoinLogoImageUrl(base: coinInfo.base))
+                    //                    .frame(width: geometry.size.width*0.12,height: geometry.size.width*0.12)
+                    //                    .edgesIgnoringSafeArea(.top)
+                    //                    .background(.red)
                     
                     VStack {
                         Spacer()
@@ -35,7 +37,7 @@ struct CoinDetailWindow: View {
                             .padding(0)
                             .font(.largeFont())
                             .lineLimit(1)
-                    
+                        
                         HStack{
                             Text("成交量")
                                 .font(.littleFont())
@@ -93,14 +95,16 @@ struct CoinDetailWindow: View {
                     
                     //中间k线图
                     KLineChart(
-                        symbol: CommonUtil.generalCoinSymbol(base: coinInfo.base,quote: coinInfo.quote),
-                        kLineInterval: kLineInterval,
+                        symbol: CommonUtil.generalCoinSymbol(
+                            base: coinInfo.base,quote: coinInfo.quote
+                        ),
+                        kLineInterval: $kLineInterval,
                         maIntervals: [MAType.ma_15, MAType.ma_20],
                         getPrintState: {
                             chartPrintState
                         }
                     )
-            //        .frame(height: geometry.size.height * 0.7)
+                    //        .frame(height: geometry.size.height * 0.7)
                     
                     //底部挂单情况
                     VStack{
@@ -109,7 +113,7 @@ struct CoinDetailWindow: View {
                     .frame(height: geometry.size.height * 0.2)
                     .background(Color("NormalBGColor").opacity(0.6))
                 }
-//                .ignoresSafeArea()
+                //                .ignoresSafeArea()
                 .frame(width: geometry.size.width*0.7,height:geometry.size.height)
             }
             .font(.defaultFont())
@@ -132,22 +136,49 @@ struct CoinDetailWindow: View {
                         print(chartPrintState)
                     })
                     
+                    fullScreenButton
                     Spacer()
                 }
                 Spacer()
             }
             .padding(.top, 2)
-//            .overlay(content: {
-//                Path {path in
-//                    path.move(to: CGPoint(x: 0, y:25))
-//                    path.addLine(to: CGPoint(x: geometry.size.width, y:25))
-//                }
-//                .stroke(.gray, lineWidth: 3)
-//            })
         }
     }
     
-    
+    @ViewBuilder
+    var fullScreenButton: some View {
+        Button {
+            withAnimation {
+                isFullScreen.toggle()
+            }
+        } label: {
+            Image("fullscreen")
+                .renderingMode(.original)
+                .resizable()
+                .foregroundStyle(Color("SystemFontColor"))
+                .background(Color("MetricIconBGColor"))
+                .frame(width: 20, height: 20)
+                .scaledToFit()
+        }
+        .background(Color("MetricIconBGColor"))
+        .frame(width: 20, height: 20)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 0)
+        )
+        // 设置动画参数
+        .sheet(isPresented: $isFullScreen) {
+            KLineChart(
+                symbol: CommonUtil.generalCoinSymbol(
+                    base: coinInfo.base,quote: coinInfo.quote
+                ),
+                kLineInterval: $kLineInterval,
+                maIntervals: [MAType.ma_15, MAType.ma_20],
+                getPrintState: {
+                    chartPrintState
+                }
+            )
+        }
+    }
     func printDeepInfo(selectedData: DeepInfoPoint?) -> Bool {
         if let selectedData {
             natificationBar.printContent(content: ["price: \(selectedData.price.coinPriceFormat())", "volume: \(selectedData.volume)"])

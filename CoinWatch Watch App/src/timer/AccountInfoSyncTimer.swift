@@ -172,7 +172,7 @@ struct AccountInfoSyncTimer {
                     interval: .d_1,
                     startTime: snapshotDate,
                     limit: 1,
-                    successCall: { data in
+                    successCall: { (data, interval) in
                         
                         var res:[LineDataEntry] = []
                         // 遍历 JSON 数组
@@ -192,7 +192,8 @@ struct AccountInfoSyncTimer {
                                     open: open,
                                     close: close,
                                     high: high,
-                                    low: low
+                                    low: low,
+                                    volume: volume
                                 )
                             }
                         }

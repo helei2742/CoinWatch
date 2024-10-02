@@ -11,9 +11,19 @@ import SwiftUI
 /**
     一条线含的所有数据
 */
-class LineDataEntry: Identifiable , Sendable{
+final class LineDataEntry: Identifiable , Sendable, Equatable{
+    static func == (lhs: LineDataEntry, rhs: LineDataEntry) -> Bool {
+        return lhs.openTime == rhs.openTime
+        && lhs.closeTime == lhs.closeTime
+        && lhs.open == lhs.open
+        && lhs.close == lhs.close
+        && lhs.high == lhs.high
+        && lhs.low == lhs.low
+        && lhs.volume == lhs.volume
+    }
     
-    var id: UUID = UUID()
+    
+    let id: UUID = UUID()
 
     /**
         开盘时间
@@ -50,7 +60,7 @@ class LineDataEntry: Identifiable , Sendable{
     /**
         量能
     */
-    var volume: Double = 0.0
+    let volume: Double
     
     /**
         MA指标
@@ -69,7 +79,8 @@ class LineDataEntry: Identifiable , Sendable{
         open: Double,
         close: Double,
         high: Double,
-        low: Double
+        low: Double,
+        volume: Double
     ) {
         self.openTime = openTime
         self.closeTime = closeTime
@@ -77,6 +88,7 @@ class LineDataEntry: Identifiable , Sendable{
         self.close = close
         self.high = high
         self.low = low
+        self.volume = volume
     }
     
     func addMA(maInterval:Int, value: Double) {

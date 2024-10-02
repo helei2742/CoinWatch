@@ -452,7 +452,7 @@ class SpotApi {
         timeZone: TimeZone? = .current,
         limit: Int? = 500,
         
-        successCall: @escaping (JSON) -> Void,
+        successCall: @escaping (JSON, KLineInterval) -> Void,
         failureCall: @escaping (BinanceAPIError) -> Void
     ) -> Void {
         
@@ -467,7 +467,9 @@ class SpotApi {
                 "timeZone": (timeZone?.secondsFromGMT())! / 3600,
                 "limit": limit
             ],
-            success: successCall,
+            success: {data in
+                successCall(data, interval)
+            },
             failure: failureCall,
             isSignature: false
         )

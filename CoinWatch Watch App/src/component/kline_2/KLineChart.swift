@@ -107,13 +107,7 @@ struct KLineChart: View {
     /**
      数据集
      */
-    @State var dataset: LineDataset = LineDataset(
-        symbol: "BTCUSDT",
-        kLineInterval: .d_1,
-        dataset: [],
-        windowStartIndex: 0,
-        windowLength: 0
-    )
+    @State var dataset: LineDataset
     
     /**
      均线类型
@@ -128,28 +122,35 @@ struct KLineChart: View {
     /**
      当前显示哪些图表
      */
-//    var chartPrintState: ChartPrintState = ChartPrintState.K_MA_LINE
+    //    var chartPrintState: ChartPrintState = ChartPrintState.K_MA_LINE
     
     var getPrintState: () -> ChartPrintState = {
         ChartPrintState.K_MA_LINE
     }
     
+    @Binding var klineInterval: KLineInterval
+        
     init(
         symbol: String,
-        kLineInterval: KLineInterval,
+        kLineInterval: Binding<KLineInterval>,
         maIntervals: [MATypeItem],
         bollConfig:(average:Int, n:Int)? = (average: 21, n: 2),
         getPrintState: @escaping () -> ChartPrintState
     ) {
+        self._klineInterval = kLineInterval
         
-        
-        self.dataset.symbol = symbol
-        self.dataset.kLineInterval = kLineInterval
-        self.dataset.windowLength = viewKLineItemCount
+        self.dataset = LineDataset(
+            symbol: symbol,
+            kLineInterval: .d_1, //默认值，监听klinechart的该属性，更改dataset中的该属性
+            dataset: [],
+            windowStartIndex: 0,
+            windowLength: viewKLineItemCount
+        )
+                
         self.maIntervals.append(contentsOf: maIntervals)
         
         self.getPrintState = getPrintState
-            
+        
         self.bollConfig = bollConfig ?? (average: 21, n: 2)
     }
     
@@ -167,11 +168,12 @@ struct KLineChart: View {
                     ProgressView()
                 }
                 
-                kLineScrollArea
-                    .frame(maxWidth: .infinity, maxHeight: .infinity
-                    )
-                    .background(Color("SystemBGColor").opacity(0.5))
-                
+                if dataset.count > 0 {
+                    kLineScrollArea
+                        .frame(maxWidth: .infinity, maxHeight: .infinity
+                        )
+                        .background(Color("SystemBGColor").opacity(0.5))
+                }
                 
                 // 显示十字线以及按住的KLineItem的信息
                 if isLineItemLongPress { //在长按
@@ -190,18 +192,22 @@ struct KLineChart: View {
                 
                 isLoadingKLineData = true
                 
+                dataset.kLineInterval = klineInterval
                 
-//                print("window区域宽 \(windowWidth) 高 \(windowHeight)")
-//                print("滚动区域宽 \(scrollAreaWidth) 高 \(scrollAreaHeight)")
-//                print("单个k线宽度 \(lineItemWidth)")
-//                print("高度比 \(heightRatio)")
-            }
-            .onChange(of: dataset.kLineInterval) { _, new in //监听k线种类的改变，手动刷新
-                
+                //首次，加载数据，滚动到最后
                 loadLineDataNetwork(beforeSuccessComplate: {
                     if dataset.count >= viewKLineItemCount {
                         position.scrollTo(x: scrollAreaWidth)
                     }
+                })
+            }
+            .onChange(of: klineInterval) { _, new in //监听k线种类的改变，手动刷新
+                dataset.kLineInterval = new
+                
+                loadLineDataNetwork(beforeSuccessComplate: {
+//                    if dataset.count >= viewKLineItemCount {
+                    position.scrollTo(edge: .trailing)
+//                    }
                 })
             }
         }
@@ -305,10 +311,10 @@ struct KLineChart: View {
         let chartPrintState = getPrintState()
         
         if chartPrintState == .MA_LINE || chartPrintState == .K_MA_LINE {
-//            maLineChart
-//                .frame(width: scrollAreaWidth, height: scrollAreaHeight)
-//                .scaleEffect(x:1,y:-1)
-//                .id(refreshViewId)
+            maLineChart
+                .frame(width: scrollAreaWidth, height: scrollAreaHeight)
+                .scaleEffect(x:1,y:-1)
+                .id(refreshViewId)
             
         }
         
@@ -402,7 +408,7 @@ struct KLineChart: View {
             
             
             //图表信息栏
-//            chartInfoBar
+            //            chartInfoBar
             
             //信息卡片
             HStack {
@@ -481,11 +487,11 @@ struct KLineChart: View {
         )
         .onAppear {
             //首次，加载数据，滚动到最后
-            loadLineDataNetwork(beforeSuccessComplate: {
-                if dataset.count >= viewKLineItemCount {
-                    position.scrollTo(x: scrollAreaWidth)
-                }
-            })
+//            loadLineDataNetwork(beforeSuccessComplate: {
+//                if dataset.count >= viewKLineItemCount {
+//                    position.scrollTo(x: scrollAreaWidth)
+//                }
+//            })
         }
     }
     
@@ -516,7 +522,7 @@ struct KLineChart: View {
                 if newOffset > scrollAreaWidth {
                     newOffset = scrollAreaWidth
                 }
-//                print("用户滚动偏移：\(new.formatted())")
+                //                print("用户滚动偏移：\(new.formatted())")
                 
                 whenOffsetChange(newOffset: newOffset)
             }
@@ -536,7 +542,7 @@ struct KLineChart: View {
                 let scrollX:Double = Double(index) * lineItemWidth - windowWidth + lineItemWidth / 2
                 
                 position.scrollTo(x: scrollX)
-//                print("表冠滚动 \(newValue), index:\(index), scrollX:\(scrollX)")
+                //                print("表冠滚动 \(newValue), index:\(index), scrollX:\(scrollX)")
             }
             
         }
@@ -648,18 +654,18 @@ struct KLineChart: View {
      */
     func updateHeightRatioAndOffset(windowStart: Int) {
         //移动后要计算最大值和最小值
-//        print("更新前 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
+        //        print("更新前 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
         dataset.calMaxMinPriceOfWindow(start: windowStart)
         heightRatio = windowHeight / (dataset.maxPrice - dataset.minPrice)
         heightOffset = dataset.minPrice * heightRatio
         
-//        print("更新完毕 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
+        //        print("更新完毕 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
     }
     
-
+    
     
     /**
-    获取当前选择的k线数据
+     获取当前选择的k线数据
      */
     func focusLineItem() -> LineDataEntry? {
         if scrollViewOffset == nil || selectedPosition == nil {
@@ -680,10 +686,10 @@ struct KLineChart: View {
 #Preview {
     //       let lineDataEntry = LineDataEntry(openTime: Date(), closeTime: Date(), open: 100, close: 120, high: 131, low: 98, volume: 1000)
     var state:ChartPrintState = .K_MA_LINE
-    
+    @State var kline:KLineInterval = .M_1
     KLineChart(
         symbol: "BTCUSDT",
-        kLineInterval: .d_1,
+        kLineInterval: $kline,
         maIntervals: [MAType.ma_20, MAType.ma_5, MAType.ma_15],
         bollConfig: (average: 21, n: 2),
         getPrintState: {

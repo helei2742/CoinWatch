@@ -7,16 +7,14 @@
 
 import SwiftUI
 
-struct ExtraArea: View {
+struct ExtraArea {
     @State var position:ScrollPosition = ScrollPosition(edge: .leading)
 
-    @State var height: Double = 0
+    @Binding var height: Double
     
     @Binding var lineItemWidth: Double
     
-    @Binding var scrollAreaWidth: Double
-
-    @Binding var scrollAreaOffset: Double?
+    @Binding var windowWidth: Double
 
     @Binding var lineDataList: [LineDataEntry]
     
@@ -25,45 +23,48 @@ struct ExtraArea: View {
     @Binding var windowEndIndex: Int?
     
     
-    var body: some View {
-        GeometryReader { geo in
-            ScrollView {
-                volumeChart
-            }
-            .scrollPosition($position)
-            .onAppear{
-                self.height = geo.size.height
-            }
-            .onChange(of:scrollAreaWidth) { oldValue, newValue in
-                //滑动区域发生变化，说明k图数据变化
-            }
-            .onChange(of: scrollAreaOffset) { oldValue, newValue in
-                //offset变化，同步
-                position.scrollTo(x: scrollAreaOffset ?? 0)
-            }
+
+    
+    @ViewBuilder
+    var content: some View {
+        ZStack {
+            buildShape(isUp: true)?.fill(.green)
+            buildShape(isUp: false)?.fill(.red)
         }
     }
     
-    @ViewBuilder
-    var volumeChart: some View {
+    func buildShape(isUp: Bool) -> Path? {
         if let retio = calHeightRetio() {
-            var x:Double = 0.0
-            ForEach(lineDataList) { lineData in
-                Path { path in
+            return Path { path in
+                var x:Double = 0.0
+                for idx in (windowStartIndex!...windowEndIndex!){
+                    let lineData = lineDataList[idx]
+                    if isUp && lineData.close < lineData.open {
+                        x += lineItemWidth
+                        continue
+                    }
+                    
+                    if !isUp && lineData.close > lineData.open {
+                        x += lineItemWidth
+                        continue
+                    }
+                    
                     path.move(to: CGPoint(x: x, y: 0))
                     let rect = CGRect (
                         x: x,
-                        y: lineData.volume * retio ,
+                        y: 0,
                         width: lineItemWidth,
-                        height:  0
+                        height:  lineData.volume * retio
                     )
+                    print("\(rect)")
                     path.addRect(rect)
                     x += lineItemWidth
                 }
-                .fill(lineData.getColor())
             }
         }
+        return nil
     }
+    
     
     func calHeightRetio() -> Double? {
         if windowStartIndex == nil || windowEndIndex == nil {
@@ -75,7 +76,7 @@ struct ExtraArea: View {
             maxVol = max(maxVol, lineDataList[idx].volume)
         }
         
-        return maxVol / height
+        return height / maxVol
     }
 }
 

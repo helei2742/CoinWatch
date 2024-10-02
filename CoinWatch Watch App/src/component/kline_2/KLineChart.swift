@@ -196,17 +196,21 @@ struct KLineChart: View {
                             longPressPrintView
                         }
                     }
+                    
+                    ExtraArea(
+                        height: $extraAreaHeight,
+                        lineItemWidth: $lineItemWidth,
+                        windowWidth: $windowWidth,
+                        lineDataList: $dataset.dataset,
+                        windowStartIndex: $windowStartIndex,
+                        windowEndIndex: $windowEndIndex
+                    )
+                    .content
+                    .background(.blue)
+                    .scaleEffect(x:1,y:-1)
+                    .frame(width: windowWidth, height: extraAreaHeight)
                 }
-                ExtraArea(
-                    lineItemWidth: $lineItemWidth,
-                    scrollAreaWidth: $scrollAreaWidth,
-                    scrollAreaOffset: $scrollViewOffset,
-                    lineDataList: $dataset.dataset,
-                    windowStartIndex: $windowStartIndex,
-                    windowEndIndex: $windowEndIndex
-                )
-                .frame(width: windowWidth, height: extraAreaHeight)
-                .background(.yellow)
+
             }
             .onAppear{
                 //设置K线视图宽度、高度
@@ -232,7 +236,7 @@ struct KLineChart: View {
                 dataset.kLineInterval = new
                 windowStartIndex = nil
                 windowEndIndex = nil
-                
+                isLoadingKLineData = true
                 loadLineDataNetwork(beforeSuccessComplate: {
                     scrollToLast()
                 })
@@ -337,6 +341,7 @@ struct KLineChart: View {
     var dynamicExtraChartPrinter: some View {
         let chartPrintState = getPrintState()
         
+        
         if chartPrintState == .MA_LINE || chartPrintState == .K_MA_LINE {
             maLineChart
                 .frame(width: scrollAreaWidth, height: scrollAreaHeight)
@@ -387,6 +392,8 @@ struct KLineChart: View {
         let xPosition:CGFloat = selectedPosition!.x
         let yPosition:CGFloat = selectedPosition!.y
         
+       
+        
         //        let windowX = xPosition - scrollViewOffset!
         
         //点击的坐标在左边还是右边
@@ -434,8 +441,6 @@ struct KLineChart: View {
             let cardY = clickWindowTop ? yPosition : yPosition - windowHeight/3
             
             
-            //图表信息栏
-            //            chartInfoBar
             
             //信息卡片
             HStack {
@@ -445,6 +450,7 @@ struct KLineChart: View {
                     Text("高")
                     Text("低")
                     Text("收")
+                    Text("量")
                 }
                 VStack{
                     Text(DateUtil.dateToStr(date: itemData.openTime))
@@ -452,6 +458,7 @@ struct KLineChart: View {
                     Text(itemData.high.coinPriceFormat())
                     Text(itemData.low.coinPriceFormat())
                     Text(itemData.close.coinPriceFormat())
+                    Text(itemData.volume.coinPriceFormat())
                 }
                 
             }
@@ -533,7 +540,6 @@ struct KLineChart: View {
                 }
             )
             .onChange(of: scrollViewOffset) { old, new in
-                print("old \(old), new \(new)")
                 guard let new else { return }
                 var newOffset = new
                 if newOffset < 0 {

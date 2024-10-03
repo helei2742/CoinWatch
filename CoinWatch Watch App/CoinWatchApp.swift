@@ -18,8 +18,8 @@ struct CoinWatch_Watch_AppApp: App {
 //                bollConfig: (average: 21, n: 2)
 //            )
             
-            CoinDetailPage(base: "BNB", quote: "USDT")
-//            MainView()
+//            CoinDetailPage(base: "BNB", quote: "USDT")
+            MainView()
         }
     }
 }

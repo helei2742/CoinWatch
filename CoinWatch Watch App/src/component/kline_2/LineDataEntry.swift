@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftyJSON
 
 /**
     一条线含的所有数据
@@ -63,6 +64,11 @@ final class LineDataEntry: Identifiable , Sendable, Equatable{
     let volume: Double
     
     /**
+     是否是预测数据
+     */
+    let isPredictData: Bool
+    
+    /**
         MA指标
     */
     var dictOfMA: [Int:Double] = [:]
@@ -80,7 +86,8 @@ final class LineDataEntry: Identifiable , Sendable, Equatable{
         close: Double,
         high: Double,
         low: Double,
-        volume: Double
+        volume: Double,
+        isPredictData: Bool = false
     ) {
         self.openTime = openTime
         self.closeTime = closeTime
@@ -89,7 +96,39 @@ final class LineDataEntry: Identifiable , Sendable, Equatable{
         self.high = high
         self.low = low
         self.volume = volume
+        self.isPredictData = isPredictData
     }
+    
+    /**
+        解析Response
+     */
+    static func generalJSONToLineDataEntryArray(data: JSON) -> [LineDataEntry] {
+        var res:[LineDataEntry] = []
+        if let jsonArray = data.array {
+            res = jsonArray.map { json in
+                let openTime = json[0].int64Value
+                let open = json[1].doubleValue
+                let high = json[2].doubleValue
+                let low = json[3].doubleValue
+                let close = json[4].doubleValue
+                let volume = json[5].doubleValue
+                let closeTime = json[6].int64Value
+                
+                
+                return LineDataEntry(
+                    openTime: Date(timeIntervalSince1970:  TimeInterval(openTime/1000)),
+                    closeTime: Date(timeIntervalSince1970:  TimeInterval(closeTime/1000)),
+                    open: open,
+                    close: close,
+                    high: high,
+                    low: low,
+                    volume: volume
+                )
+            }
+        }
+        return res
+    }
+    
     
     func addMA(maInterval:Int, value: Double) {
         dictOfMA[maInterval] = value

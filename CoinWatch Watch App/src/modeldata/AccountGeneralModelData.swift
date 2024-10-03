@@ -18,34 +18,67 @@ import SwiftyJSON
 class AccountGeneralModelData: ObservableObject{
     static let sharedInstance = AccountGeneralModelData()
     
+    private var spotInfo:SpotInfo = SpotInfo.sharedInstance
+    /**
+     现货资产总价值
+     */
+    var spotTotalValue: Double {
+        get{
+            var totalValue = Double(0.0)
+            for accountSpotItem in accountSpot {
+                let symbol = accountSpotItem.baseAsset + spotUnit.rawValue
+                if let spotInfoItem = spotInfo.findSpotInfo(symbol: symbol) {
+                    totalValue += accountSpotItem.count * spotInfoItem.newPrise
+                }
+            }
+            return totalValue
+        }
+    }
     
-    var spotTotalValue: Double//现货资产总价值
-    var spotTotalCount: Int = 0    //现货资产总数
-    var spotUnit: CoinUnit = .USDT      //现货资产单位
+    /**
+     现货资产总数
+     */
+    var spotTotalCount: Int = 0
     
-    var contractTotalValue: Double //合约资产总数
-    var contractTotalCount: Int = 0    //合约仓位个数
-    var contractUnit: CoinUnit       //合约资产单位
+    /**
+     现货资产单位
+     */
+    var spotUnit: CoinUnit = .USDT
+    
+    /**
+     合约资产总数
+     */
+    var contractTotalValue: Double
+    
+    /**
+     合约仓位个数
+     */
+    var contractTotalCount: Int = 0
+    
+    /**
+     合约资产单位
+     */
+    var contractUnit: CoinUnit       
     
     /**
      现货资产日变化情况
      */
     var spotTotalValueDayHistory:[AccountSpotDayInfo] = [
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-22 11:11:11"), spotTotalValue: 18.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-21 11:11:11"), spotTotalValue: 12.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-20 11:11:11"), spotTotalValue: 10000.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-19 11:11:11"), spotTotalValue: 7002.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-18 11:11:11"), spotTotalValue: 1293.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-17 11:11:11"), spotTotalValue: 90.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-16 11:11:11"), spotTotalValue: 80.0),
-        
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-15 11:11:11"), spotTotalValue: 80.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-14 11:11:11"), spotTotalValue: 8009.0),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-13 11:11:11"), spotTotalValue: 123),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-12 11:11:11"), spotTotalValue: 1242),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-11 11:11:11"), spotTotalValue: 3322),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-10 11:11:11"), spotTotalValue: 3213),
-        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-09 11:11:11"), spotTotalValue: 3000.0)
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-22 11:11:11"), spotTotalValue: 18.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-21 11:11:11"), spotTotalValue: 12.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-20 11:11:11"), spotTotalValue: 10000.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-19 11:11:11"), spotTotalValue: 7002.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-18 11:11:11"), spotTotalValue: 1293.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-17 11:11:11"), spotTotalValue: 90.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-16 11:11:11"), spotTotalValue: 80.0),
+//        
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-15 11:11:11"), spotTotalValue: 80.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-14 11:11:11"), spotTotalValue: 8009.0),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-13 11:11:11"), spotTotalValue: 123),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-12 11:11:11"), spotTotalValue: 1242),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-11 11:11:11"), spotTotalValue: 3322),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-10 11:11:11"), spotTotalValue: 3213),
+//        AccountSpotDayInfo(date: DateUtil.strToDate(str: "2024-09-09 11:11:11"), spotTotalValue: 3000.0)
     ]
     
     /**
@@ -55,7 +88,6 @@ class AccountGeneralModelData: ObservableObject{
     
     private init() {
         // 初始化代码
-        spotTotalValue = 11820.89
         
         contractTotalValue = 0.0
         contractUnit = .USDT
@@ -63,16 +95,47 @@ class AccountGeneralModelData: ObservableObject{
         accountSpot = []
     }
     
-    
 }
 
 @Observable
-class AccountSpotDayInfo: ObservableObject {
+class AccountSpotDayInfo: ObservableObject, Equatable {
+    static func == (lhs: AccountSpotDayInfo, rhs: AccountSpotDayInfo) -> Bool {
+        lhs.date == rhs.date
+    }
+    
+    /**
+     日期
+     */
     var date: Date
     
+    /**
+     当日的一些价格数据，如：
+     {
+          "data":{
+             "balances":[
+                {
+                   "asset":"BTC",
+                   "free":"0.09905021",
+                   "locked":"0.00000000"
+                },
+                {
+                   "asset":"USDT",
+                   "free":"1.89109409",
+                   "locked":"0.00000000"
+                }
+             ],
+             "totalAssetOfBtc":"0.09942700"
+          },
+          "type":"spot",
+          "updateTime":1576281599000
+       }
+     */
     var snapshotVos: JSON
     
-    var spotTotalValue: Double//现货资产总价值
+    /**
+     现货资产总价值
+     */
+    var spotTotalValue: Double
     
     init(date: Date, snapshotVos: JSON? = nil, spotTotalValue: Double) {
         self.date = date
@@ -83,11 +146,22 @@ class AccountSpotDayInfo: ObservableObject {
 
 
 @Observable
-class AccountSpotItem: Identifiable{
+class AccountSpotItem: Identifiable, Equatable{
+    static func == (lhs: AccountSpotItem, rhs: AccountSpotItem) -> Bool {
+        lhs.baseAsset == rhs.baseAsset && lhs.quoteAsset == rhs.quoteAsset
+    }
+    
     static private var nextId = 0
     
-    var baseAsset: String   // 现货名 如 BTC/USDT
-    var quoteAsset: String  // 计算单位 如 BTC/USDT
+    /**
+     现货名 如 BTC/USDT的BTC
+     */
+    var baseAsset: String
+    
+    /**
+     计算单位 如 BTC/USDT的USDT
+     */
+    var quoteAsset: String
     
     private var internalCount: Double = 0
     var count: Double {
@@ -100,7 +174,10 @@ class AccountSpotItem: Identifiable{
             return internalCount
         }
     }
-    var lastCount: Double //上一次的个数
+    /**
+     上一次的个数
+     */
+    var lastCount: Double
     
     private var internalAssetValue: Double = 0
     var assetValue: Double {
@@ -110,30 +187,19 @@ class AccountSpotItem: Identifiable{
         }
         get {
             if let spotInfo = SpotInfo.sharedInstance.findSpotInfo(base: baseAsset, quote: quoteAsset) {
-                return spotInfo.price  * count
+                return spotInfo.newPrise  * count
             }
             
             return 0
         }
     }
-    var lastAssetValue: Double //上一次的资产价值
+    /**
+     上一次的价值
+     */
+    var lastAssetValue: Double
     
-    private var internalNewPrice: Double = 0
-    //最新价格，相对于 计算单位
-    var newPrise: Double{
-        set {
-            self.lastNewPrise = newPrise
-            internalNewPrice = newValue
-        }
-        get {
-            if let spotInfo = SpotInfo.sharedInstance.findSpotInfo(base: baseAsset, quote: quoteAsset) {
-                return spotInfo.price
-            }
-            
-            return 0
-        }
-    }
-    var lastNewPrise: Double  //上一次的最新价格
+    
+
     
     init(baseAsset: String,
          quoteAsset: String,
@@ -144,10 +210,7 @@ class AccountSpotItem: Identifiable{
         
         self.internalCount = count
         self.lastCount = count
-        
         self.lastAssetValue = 0.0
-        
-        self.lastNewPrise = 0
     }
 }
 

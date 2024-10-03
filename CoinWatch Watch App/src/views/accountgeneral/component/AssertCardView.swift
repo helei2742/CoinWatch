@@ -13,6 +13,8 @@ struct AssertCardView: View {
     
     @EnvironmentObject var modelData:AccountGeneralModelData
     
+   
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
@@ -55,6 +57,8 @@ struct AssertCardView: View {
 struct SpotLittleCard: View {
     var accounSpotItem:AccountSpotItem
     
+    @State var spotInfo:SpotInfo = SpotInfo.sharedInstance
+    
     var quote: String
     
     var body: some View {
@@ -71,16 +75,19 @@ struct SpotLittleCard: View {
                 )
             
             VStack(spacing: 0) {
+                let newPrice = spotInfo.findSpotInfo(base: accounSpotItem.baseAsset, quote: quote)?.newPrise ?? 0.0
+                let lastPrice = spotInfo.findSpotInfo(base: accounSpotItem.baseAsset, quote: quote)?.lastNewPrise ?? 0.0
+                
                 AssertCardNumberRaw(
-                    number: accounSpotItem.assetValue,
-                    lastNumber: accounSpotItem.lastAssetValue,
+                    number: newPrice * accounSpotItem.count,
+                    lastNumber: lastPrice * accounSpotItem.lastCount,
                     title: "价 值",
                     quote: quote
                 )
                 
                 AssertCardNumberRaw(
-                    number: accounSpotItem.newPrise,
-                    lastNumber: accounSpotItem.lastNewPrise,
+                    number: newPrice,
+                    lastNumber: lastPrice,
                     title: "最新价",
                     quote: quote
                 )

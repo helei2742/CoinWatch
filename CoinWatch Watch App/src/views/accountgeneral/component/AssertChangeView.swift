@@ -16,7 +16,7 @@ struct AssertChangeView: View {
         GeometryReader { geometry in
             SimpleAreaChart(rawSelectDate: $day)
                 .environmentObject(modelData)
-                .frame(height: geometry.size.height)
+                .frame(width: geometry.size.width,height: geometry.size.height)
         }
     }
 }

@@ -38,7 +38,7 @@ struct AccountInfoSyncTimer {
      开始同步账户现货信息的任务
      */
     func startAccountSpotAssertSyncTimer() {
-        accountSpotAssertSyncTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+        accountSpotAssertSyncTimer = Timer.scheduledTimer(withTimeInterval: 60*60, repeats: true) { _ in
             self.accountSpotAssertSync()
         }
     }
@@ -56,7 +56,7 @@ struct AccountInfoSyncTimer {
      开始同步按日账户历史信息任务
      */
     func startAccountSpotDayHistorySyncTimer() {
-        accountSpotDayHistorySyncTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+        accountSpotDayHistorySyncTimer = Timer.scheduledTimer(withTimeInterval: 12*60*60, repeats: true) { _ in
             self.accountSpotDayHistorySync()
         }
     }
@@ -108,17 +108,7 @@ struct AccountInfoSyncTimer {
             existSpot.firstIndex(of: item.baseAsset) == nil
         }
         
-        //更新spotTotalValue
-        var totalValue = Double(0.0)
-        for accountSpotItem in accountInfo.accountSpot {
-            let symbol = accountSpotItem.baseAsset + accountInfo.spotUnit.rawValue
-            if let spotInfoItem = spotInfo.findSpotInfo(symbol: symbol) {
-                totalValue += accountSpotItem.count * spotInfoItem.price
-            }
-        }
-        
-        accountInfo.spotTotalValue = totalValue
-        
+                
         //更新spotTotalCount
         accountInfo.spotTotalCount = accountInfo.accountSpot.count
     }
@@ -197,11 +187,13 @@ struct AccountInfoSyncTimer {
                                 )
                             }
                         }
+                        if !res.isEmpty {
+                            //记录或更新这条交易日信息
+                            spotInfo.addCoinTradingDayInfo(date: snapshotDate, symbol: symbol, value: res[0])
+                            
+                            accountSpotDayInfo.spotTotalValue += (symbolMapCount[symbol] ?? 0.0) * res[0].close
+                        }
                         
-                        //记录或更新这条交易日信息
-                        spotInfo.addCoinTradingDayInfo(date: snapshotDate, symbol: symbol, value: res[0])
-                        
-                        accountSpotDayInfo.spotTotalValue += (symbolMapCount[symbol] ?? 0.0) * res[0].close
                     },
                     failureCall: {error in
                         print(error)

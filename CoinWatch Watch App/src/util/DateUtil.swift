@@ -12,6 +12,8 @@ class DateUtil {
     
     static let inner: Inner = Inner(pattern: "yyyy-MM-dd HH:mm:ss")
     
+    static let maxDate = calDate(from: Date(), count: 99999, timeUnit: .d)!
+    
     static func timestarpToDate(timestamp: Double) -> Date  {
         Date(timeIntervalSince1970: TimeInterval(timestamp/1000))
     }

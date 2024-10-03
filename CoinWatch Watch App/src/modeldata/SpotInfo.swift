@@ -67,9 +67,9 @@ class SpotInfo {
             - peice:
         - Returns: Void
      */
-    func updateSpotInfo(base: String, quote: String,price:Double) {
+    func updateSpotInfo(base: String, quote: String, price:Double) {
         if let existItem = findSpotInfo(symbol: CommonUtil.generalCoinSymbol(base: base, quote: quote)) {
-            existItem.price = price
+            existItem.newPrise = price
         } else {
             spotInfoList?.append(SpotInfoItem(
                 base: base,
@@ -114,17 +114,36 @@ class CoinTradingDayInfo {
 /**
  单条现货信息
  */
-//@Observable
+@Observable
 class SpotInfoItem {
     var base: String
     var quote: String
-    var price: Double
+    
+    private var internalNewPrice: Double = 0
+    /**
+     最新价格，相对于 计算单位
+     */
+    var newPrise: Double{
+        set {
+            self.lastNewPrise = newPrise
+            internalNewPrice = newValue
+        }
+        get {
+            return self.internalNewPrice
+        }
+    }
+    /**
+     上一次的最新价格
+     */
+    var lastNewPrise: Double
     
     
     init(base: String, quote: String, price: Double) {
         self.base = base
         self.quote = quote
-        self.price = price
+        
+        self.internalNewPrice = price
+        self.lastNewPrise = price
     }
 }
 

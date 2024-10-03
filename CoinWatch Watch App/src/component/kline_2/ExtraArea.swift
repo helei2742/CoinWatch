@@ -27,16 +27,35 @@ struct ExtraArea {
     
     @ViewBuilder
     var content: some View {
-        ZStack {
-            buildShape(isUp: true)?.fill(.green)
-            buildShape(isUp: false)?.fill(.red)
+        GeometryReader { geo in
+            ZStack {
+                buildShape(isUp: true)?.fill(.green)
+                    .clipShape(Path { path in
+                        path.addRect(CGRect(
+                            x: 0,
+                            y: 0,
+                            width: geo.size.width,
+                            height:  geo.size.height
+                        ))
+                    })
+                
+                buildShape(isUp: false)?.fill(.red)
+                    .clipShape(Path { path in
+                        path.addRect(CGRect(
+                            x: 0,
+                            y: 0,
+                            width: geo.size.width,
+                            height:  geo.size.height
+                        ))
+                    })
+            }
         }
     }
     
     func buildShape(isUp: Bool) -> Path? {
         if let retio = calHeightRetio() {
             return Path { path in
-                var x:Double = 0.0
+                var x:Double = -lineItemWidth/2
                 for idx in (windowStartIndex!...windowEndIndex!){
                     let lineData = lineDataList[idx]
                     if isUp && lineData.close < lineData.open {
@@ -56,7 +75,6 @@ struct ExtraArea {
                         width: lineItemWidth,
                         height:  lineData.volume * retio
                     )
-                    print("\(rect)")
                     path.addRect(rect)
                     x += lineItemWidth
                 }

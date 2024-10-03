@@ -46,8 +46,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/KLineChart.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "345"
-            endingLineNumber = "345"
+            startingLineNumber = "344"
+            endingLineNumber = "344"
             landmarkName = "dynamicExtraChartPrinter"
             landmarkType = "24">
          </BreakpointContent>
@@ -71,22 +71,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CDC6C158-0F84-4FFB-9874-8BB1BDAD4253"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/component/kline_2/LineDataset.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "314"
-            endingLineNumber = "314"
-            landmarkName = "calculateMA(maIntervals:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "9D17AA0B-F6BF-4C9D-ACA8-1B8B30177921"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -94,25 +78,9 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/LineDataEntry.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "addMA(maInterval:value:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "18FF7CCB-81C5-4012-93A8-60A6278E75D6"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/component/kline_2/LineDataset.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "316"
-            endingLineNumber = "316"
-            landmarkName = "calculateMA(maIntervals:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -174,8 +142,8 @@
             filePath = "CoinWatch Watch App/src/views/base/coindetail/CoinDetailWindow.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "printDeepInfo(selectedData:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -200,7 +168,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2E3907F4-C3BB-4686-8516-73632E856827"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoinWatch Watch App/src/timer/SpotInfoSyncTimer.swift"
@@ -222,8 +190,8 @@
             filePath = "CoinWatch Watch App/src/network/BinanceApi.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "308"
+            endingLineNumber = "308"
             landmarkName = "coinsNewPrice(symbols:whenComplate:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +206,8 @@
             filePath = "CoinWatch Watch App/src/network/BinanceApiRequest.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "binanceApiRequest(method:url:ipWeight:body:parameters:success:failure:cryptoInfo:isSignature:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,25 +222,9 @@
             filePath = "CoinWatch Watch App/src/timer/SpotInfoSyncTimer.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
             landmarkName = "setSpotInfoFromResponse(data:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2E38C731-A13B-4011-A80D-36A8EDF69E5F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/views/MainView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "closeSyncDataTesk()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -286,24 +238,8 @@
             filePath = "CoinWatch Watch App/src/views/MainView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5FCEB0E7-2C5F-4A25-8962-5D53131A291D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/views/MainView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -334,8 +270,8 @@
             filePath = "CoinWatch Watch App/src/network/BinanceApiRequest.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "request(method:url:body:parameters:successCall:failureCall:isLoading:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -353,54 +289,6 @@
             startingLineNumber = "90"
             endingLineNumber = "90"
             landmarkName = "setAccountSpotInfo(data:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6B31CFFE-206A-4C34-8919-173ECD91C231"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "setAccountSpotInfo(data:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "3C4CD0B3-4CFC-4BD5-BBB9-5BC88C5EB764"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
-            landmarkName = "setAccountSpotDayHistory(data:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "47092BF9-AC60-4FA7-9DFB-5F012976620C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
-            landmarkName = "setAccountSpotDayHistory(data:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -430,8 +318,8 @@
             filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "accountSpotDayHistorySync()"
             landmarkType = "7">
          </BreakpointContent>
@@ -462,8 +350,8 @@
             filePath = "CoinWatch Watch App/src/network/BinanceApi.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "464"
-            endingLineNumber = "464"
+            startingLineNumber = "504"
+            endingLineNumber = "504"
             landmarkName = "kLineData(symbol:interval:startTime:endTime:timeZone:limit:successCall:failureCall:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -494,8 +382,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/KLineChart.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "615"
-            endingLineNumber = "615"
+            startingLineNumber = "613"
+            endingLineNumber = "613"
             landmarkName = "whenOffsetChange(newOffset:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -510,8 +398,8 @@
             filePath = "CoinWatch Watch App/src/util/DateUtil.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
             landmarkName = "calDate(from:count:timeUnit:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -526,8 +414,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/LineDataset.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "loadLineData(startTime:limit:actionOfNewData:whenComplate:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,8 +430,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/KLineChart.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -558,8 +446,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/KLineChart.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -590,8 +478,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/KLineChart.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "622"
-            endingLineNumber = "622"
+            startingLineNumber = "620"
+            endingLineNumber = "620"
             landmarkName = "whenOffsetChange(newOffset:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -606,8 +494,8 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/ExtraArea.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "calHeightRetio()"
             landmarkType = "7">
          </BreakpointContent>
@@ -622,40 +510,74 @@
             filePath = "CoinWatch Watch App/src/component/kline_2/ExtraArea.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
             landmarkName = "calHeightRetio()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "E50F692C-7BC4-418C-9797-9412E8725ED1 - 65f805d76d599aa9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CoinWatch_Watch_App.ExtraArea.calHeightRetio() -&gt; Swift.Optional&lt;Swift.Double&gt;"
-                  moduleName = "CoinWatch Watch App.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/helei/develop/xcodeworkspace/CoinWatch/CoinWatch%20Watch%20App/src/component/kline_2/ExtraArea.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "67"
-                  endingLineNumber = "67">
-               </Location>
-               <Location
-                  uuid = "E50F692C-7BC4-418C-9797-9412E8725ED1 - 65f805d76d599a2d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CoinWatch_Watch_App.ExtraArea.calHeightRetio() -&gt; Swift.Optional&lt;Swift.Double&gt;"
-                  moduleName = "CoinWatch Watch App.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/helei/develop/xcodeworkspace/CoinWatch/CoinWatch%20Watch%20App/src/component/kline_2/ExtraArea.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "71"
-                  endingLineNumber = "71">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "46ECE5DB-4DC5-46C2-8818-D26C1500A6B3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "setAccountSpotDayHistory(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DF862884-57E3-464D-9BD8-0F0D2579C19D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "setAccountSpotDayHistory(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EAB135AF-AB05-4738-9C91-70EC4FAF0DE7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CoinWatch Watch App/src/timer/AccountInfoSyncTimer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "setAccountSpotDayHistory(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3489D5E3-E130-4207-AAE2-D32B38B7F0F5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CoinWatch Watch App/src/views/market/component/MarketCoinCard.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "chartArea"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

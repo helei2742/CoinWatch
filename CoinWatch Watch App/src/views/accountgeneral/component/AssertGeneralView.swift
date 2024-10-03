@@ -14,8 +14,9 @@ struct AssertGeneralView:View {
     @EnvironmentObject var modelData: AccountGeneralModelData
     
     @State private var selection = 0
-    
+        
     var body: some View {
+        
         // 定义一个 Button，点击时触发 Alert
         TabView(selection: $selection) {
             // 第一个标签页

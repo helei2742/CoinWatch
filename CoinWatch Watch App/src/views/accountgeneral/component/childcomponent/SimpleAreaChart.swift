@@ -34,8 +34,9 @@ struct SimpleAreaChart: View {
                 VStack{
                     
                     Text("资产变化")
+                        .padding(10)
                         .font(.defaultFont())
-                        .foregroundStyle(Color.white.opacity(0.6))
+                        .foregroundStyle(Color("SystemFontColor"))
                     Spacer()
                 }
                 
@@ -44,16 +45,16 @@ struct SimpleAreaChart: View {
             
             
             Chart(modelData.spotTotalValueDayHistory, id: \.date) { element in
-                PointMark (
+                LineMark (
                     x: .value("日期", element.date, unit: .day),
                     y: .value("美元", element.spotTotalValue.coinPriceFormat())
                 )
                 .foregroundStyle(Color.orange)
-                .symbolSize(8)
+//                .symbolSize(8)
                 
                 AreaMark (
                     x: .value("日期", element.date, unit: .day),
-                    y: .value("美元", element.spotTotalValue.coinPriceFormat())
+                    y: .value("美元", element.spotTotalValue)
                 )
                 .foregroundStyle(Color.orange.opacity(0.6))
                 

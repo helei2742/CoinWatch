@@ -15,31 +15,38 @@ import SwiftUI
 struct AccountGeneralPage: View {
     var modelData: AccountGeneralModelData = AccountGeneralModelData.sharedInstance
     
+    @Binding var loadState: Int
+    
     var body: some View {
         GeometryReader { geometry in
-            VStack (spacing: 5){
-                
-                AssertGeneralView()
-                    .environmentObject(modelData)
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.3)
+            ZStack {
+                VStack (spacing: 5){
+                    
+                    AssertGeneralView()
+                        .environmentObject(modelData)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.3)
+                    
+                    AssertCardView()
+                        .environmentObject(modelData)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.35)
 
+                    AssertChangeView()
+                        .environmentObject(modelData)
+                        .ignoresSafeArea()
+                        .frame( width: geometry.size.width, height: geometry.size.height * 0.35)
+                }
                 
-                AssertCardView()
-                    .environmentObject(modelData)
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.35)
-                
-                
-                AssertChangeView()
-                    .environmentObject(modelData)
-                    .frame( width: geometry.size.width, height: geometry.size.height * 0.35)
+                .font(.defaultFont())
             }
-            .font(.defaultFont())
         }
-       
+        .onChange(of: modelData.accountSpot) { oldValue, newValue in
+            loadState += 1
+        }
+        .onChange(of: modelData.spotTotalValueDayHistory) { oldValue, newValue in
+            loadState += 1
+        }
+        .onChange(of: modelData.spotTotalValue) { oldValue, newValue in
+            loadState += 1
+        }
     }
-}
-
-
-#Preview {
-    AccountGeneralPage()
 }

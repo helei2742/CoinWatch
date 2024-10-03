@@ -10,6 +10,15 @@ import KeychainSwift
 
 class LoginUtil {
     static let keyChain: KeychainSwift = KeychainSwift()
+    static let user:UserInfo = UserInfo.sharedInstance
+    
+    /**
+     自动登录
+     */
+    static func autoLogin() {
+        print("自动登录")
+        user.usable = true
+    }
     
     static func login(username username: String, password password: String, callback: (Bool) -> Void) {
         //TODO 请求后端登录

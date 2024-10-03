@@ -68,7 +68,7 @@ struct CoinDetailWindow: View {
                         .frame(width: geometry.size.width*0.7)
                         .edgesIgnoringSafeArea(.top)
                         .frame(height: 0)
-                    
+                   
                     //中间k线图
                     KLineChart(
                         symbol: CommonUtil.generalCoinSymbol(
@@ -80,7 +80,8 @@ struct CoinDetailWindow: View {
                             chartPrintState
                         }
                     )
-                    
+                    .frame(height: geometry.size.height * 0.85)
+                    Spacer()
 //                    //底部挂单情况
 //                    VStack{
 //                        Text("显示用户仓位和挂单")

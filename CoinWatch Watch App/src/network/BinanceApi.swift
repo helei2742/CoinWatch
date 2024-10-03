@@ -12,7 +12,7 @@ class BinanceApi {
     
     static var publicURL: BaseURL = BaseURL.PUBLIC_DATA_API
     
-    static var accountURL: BaseURL = BaseURL.NORMAL_API_2
+    static var accountURL: BaseURL = BaseURL.NORMAL_API_1
     
     static var spotApi: SpotApi = SpotApi(publicURL: publicURL, accountURL: accountURL)
     
@@ -240,6 +240,46 @@ class SpotApi {
         self.accountURL = accountURL
     }
     
+    
+    /**
+     获取所有币24小时的信息
+     - Parameters:
+        - whenComplate:回调
+         [`
+           {
+             "symbol": "IMXUSDT",
+             "priceChange": "-0.0548",
+             "priceChangePercent": "-3.454",
+             "weightedAvgPrice": "1.5657",
+             "lastPrice": "1.5318",
+             "lastQty": "7",
+             "openPrice": "1.5866",
+             "highPrice": "1.6544",
+             "lowPrice": "1.4897",
+             "volume": "15486616",
+             "quoteVolume": "24246799.2780",
+             "openTime": 1727865420000,
+             "closeTime": 1727951879231,
+             "firstId": 255523129,
+             "lastId": 255746633,
+             "count": 223505
+           }
+         ]`
+     */
+    func allCoin24HrList(whenComplate: @escaping (JSON?) -> Void) {
+        
+        BinanceApiRequest.binanceApiRequest(
+            url: "https://www.binance.com/fapi/v1/ticker/24hr",
+            ipWeight:5,
+            success: { data in
+                whenComplate(data)
+            },
+            failure: { error in
+                whenComplate(nil)
+            },
+            isSignature: false
+        )
+    }
     /**
      获取币种最新价格
      - Parameters:

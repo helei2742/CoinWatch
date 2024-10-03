@@ -57,7 +57,9 @@ struct MALine {
             //ma的线
             var lastPoint:CGPoint? = nil
             lineDataEntryList.forEach { dataEntry in
-                
+                if dataEntry.isPredictData {
+                    return
+                }
                 if let ma = dataEntry.dictOfMA[maInterval] {
                     let y = ma * heightRatio - heightOffset
                     if y .isNaN {

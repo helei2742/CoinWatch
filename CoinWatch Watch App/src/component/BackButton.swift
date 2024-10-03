@@ -20,7 +20,20 @@ struct BackButton: View {
                 .padding(2)
                 .clipShape(Circle())
         }
+        .buttonStyle(SelectButtonStyle())
         .frame(width: width, height: width)
         .clipShape(Circle())
     }
+}
+
+struct SelectButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+           configuration.label
+           .buttonStyle(PlainButtonStyle())
+           .padding(0)
+           .clipShape(
+               RoundedRectangle(cornerRadius: 2)
+           )
+           .scaleEffect(configuration.isPressed ? 0.9 : 1)
+       }
 }

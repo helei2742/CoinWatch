@@ -22,7 +22,7 @@ struct SpotInfoSyncTimer {
     
     func startTimer() {
         // 创建并启动定时器
-        spotInfoSyncTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+        spotInfoSyncTimer = Timer.scheduledTimer(withTimeInterval: 25.0, repeats: true) { _ in
             self.spotInfoSync()
         }
         // 设置定时器每5秒执行一次请求
@@ -79,6 +79,7 @@ struct SpotInfoSyncTimer {
             let base = symbol.substring(to: symbol.count - quote.count) ?? "error"
             
             spotInfo.updateSpotInfo(base: base, quote: quote, price: item["price"].doubleValue)
+            
         }
         print("现货信息同步完成，\(String(describing: spotInfo.spotInfoList))")
     }

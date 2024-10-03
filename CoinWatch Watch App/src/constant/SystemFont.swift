@@ -22,7 +22,16 @@ extension Font {
     static func numberFont_0() -> Font {
         return
             Font.custom("PingFang", size: 25).weight(.bold)
-        
+    }
+    
+    static func numberFont_1() -> Font {
+        return
+            Font.custom("PingFang", size: 20).weight(.bold)
+    }
+    
+    static func numberFont_2() -> Font {
+        return
+            Font.custom("PingFang", size: 10).weight(.bold)
     }
     
     static func littleFont() -> Font {

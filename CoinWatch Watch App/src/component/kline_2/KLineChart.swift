@@ -197,26 +197,25 @@ struct KLineChart: View {
                         }
                     }
                     
-                    ExtraArea(
-                        height: $extraAreaHeight,
-                        lineItemWidth: $lineItemWidth,
-                        windowWidth: $windowWidth,
-                        lineDataList: $dataset.dataset,
-                        windowStartIndex: $windowStartIndex,
-                        windowEndIndex: $windowEndIndex
-                    )
-                    .content
-                    .background(.blue)
-                    .scaleEffect(x:1,y:-1)
-                    .frame(width: windowWidth, height: extraAreaHeight)
                 }
-
+                ExtraArea(
+                    height: $extraAreaHeight,
+                    lineItemWidth: $lineItemWidth,
+                    windowWidth: $windowWidth,
+                    lineDataList: $dataset.dataset,
+                    windowStartIndex: $windowStartIndex,
+                    windowEndIndex: $windowEndIndex
+                )
+                .content
+                .scaleEffect(x:1,y:-1)
+                .frame(width: windowWidth, height: extraAreaHeight)
+                Spacer()
             }
             .onAppear{
                 //设置K线视图宽度、高度
                 windowWidth = geometry.size.width
                 windowHeight = geometry.size.height
-                extraAreaHeight = windowHeight / 3
+                extraAreaHeight = windowHeight / 4
                 
                 lineItemWidth = windowWidth / Double(viewKLineItemCount) - marginOfLineItem
                 
@@ -497,7 +496,6 @@ struct KLineChart: View {
                     .id(lineDataEntry.id)
                 }
             }
-            
         }
         .scrollTargetLayout()
         .overlay(
@@ -637,6 +635,10 @@ struct KLineChart: View {
         
         //更新窗口
         if newOffset >= 0 {
+//            let start = Int(newOffset/lineItemWidth)
+//            windowStartIndex = start < 0 ? 0 : start
+//            let end = (windowStartIndex ?? 0) + viewKLineItemCount
+//            windowEndIndex = end >= dataset.count ? dataset.count - 1: end
             windowStartIndex = Int(newOffset/lineItemWidth)
             var end = Int((newOffset + windowWidth)/lineItemWidth)
             windowEndIndex = end >= dataset.count ? end - 1: end

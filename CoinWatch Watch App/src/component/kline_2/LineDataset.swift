@@ -14,7 +14,7 @@ import SwiftyJSON
  */
 @Observable
 class LineDataset {
-    
+
     /**
      币种名称，如 BTCUSDT
      */
@@ -176,7 +176,7 @@ class LineDataset {
                     return
                 }
                 //更新dataset
-                let newData = self.generalJSONToLineDataEntryArray(data: data).sorted(by:{$0.openTime > $1.openTime})
+                let newData = LineDataEntry.generalJSONToLineDataEntryArray(data: data).sorted(by:{$0.openTime > $1.openTime})
                 if newData.count == 0 {
                     self.isEndOfDataset = true
                 }
@@ -186,7 +186,7 @@ class LineDataset {
                 //排序去重
                 self.dataset.sort(by:{$0.openTime < $1.openTime})
                 var seen = [LineDataEntry]()
-                let uniqueArray = self.dataset.filter { item in
+                var uniqueArray = self.dataset.filter { item in
                     if seen.contains(item) {
                         return false
                     } else {
@@ -194,6 +194,14 @@ class LineDataset {
                         return true
                     }
                 }
+                
+                //添加预测数据
+                if let last = uniqueArray.last {
+                    if !last.isPredictData {
+                        uniqueArray.append(contentsOf: self.loadPridictData(startDate: last.closeTime))
+                    }
+                }
+                
                 
                 self.dataset = uniqueArray
 
@@ -215,38 +223,24 @@ class LineDataset {
         )
     }
     
+    
     /**
-        解析Response
+     加载预测数据
      */
-    func generalJSONToLineDataEntryArray(data: JSON) -> [LineDataEntry] {
-//        print("解析k线数据")
-        var res:[LineDataEntry] = []
-        // 遍历 JSON 数组
-        if let jsonArray = data.array {
-            res = jsonArray.map { json in
-                let openTime = json[0].int64Value
-                let open = json[1].doubleValue
-                let high = json[2].doubleValue
-                let low = json[3].doubleValue
-                let close = json[4].doubleValue
-                let volume = json[5].doubleValue
-                let closeTime = json[6].int64Value
-                
-                
-                return LineDataEntry(
-                    openTime: Date(timeIntervalSince1970:  TimeInterval(openTime/1000)),
-                    closeTime: Date(timeIntervalSince1970:  TimeInterval(closeTime/1000)),
-                    open: open,
-                    close: close,
-                    high: high,
-                    low: low,
-                    volume: volume
-                )
-            }
+    func loadPridictData(startDate: Date) -> [LineDataEntry] {
+        var arr:[LineDataEntry] = []
+        var open = startDate
+        for _ in (0...5) {
+            let close = DateUtil.calDate(from: open, count: kLineInterval.rawValue.interval, timeUnit: kLineInterval.rawValue.timeUnit)!
+            arr.append(LineDataEntry(
+                openTime: open,
+                closeTime: close,
+                open: 0, close: 0, high: 0, low: 0, volume: 0, isPredictData: true))
+            open = close
         }
-//        print("解析k线数据success\n")
-        return res
+        return arr
     }
+    
 
     /**
         根据爽口计算最大价格和最小价格
@@ -261,12 +255,17 @@ class LineDataset {
 //            print("数据为不合法，无法计算最值")
             return
         }
+        
         var minV:Double = self.dataset[start].low
         var maxV:Double = 0
 
         for i in (start...end) {
-            minV = min(minV, dataset[i].low)
-            maxV = max(maxV, dataset[i].high)
+            let entry = dataset[i]
+            if entry.isPredictData {
+                continue
+            }
+            minV = min(minV, entry.low)
+            maxV = max(maxV, entry.high)
         }
         self.maxPrice = maxV
         self.minPrice = minV

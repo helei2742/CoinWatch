@@ -10,25 +10,20 @@ import SwiftUI
 struct MainView: View {
     
     /**
-    定时刷新现货信息
-     */
-    @State private var spotInfoSyncTimer: SpotInfoSyncTimer =  SpotInfoSyncTimer()
-    
-    /**
-    定时刷账户信息
-     */
-    @State private var accountInfoSyncTimer: AccountInfoSyncTimer = AccountInfoSyncTimer()
-    
-    /**
     页面的一个悬浮框，能全局使用
      */
     @State var natificationBar: NatificationBar = NatificationBar.getInstance()
-
+    
     /**
-    当前是否登录
+     当前是否在检查登录
      */
-    @State var isLogin: Bool = false
-        
+    @State var chackingLogin: Bool = true
+       
+    /**
+     当前登录用户
+     */
+    @State var user:UserInfo = UserInfo.sharedInstance
+    
     var body: some View {
         ZStack{        
             switch ViewRouter.currentView() {
@@ -56,48 +51,23 @@ struct MainView: View {
                 .content()
         }
         .onAppear() {
-            if LoginUtil.isLogin() {
-                print("当前账户已登录")
-                isLogin = true
-            }
+            //尝试自动登录
+            LoginUtil.autoLogin()
         }
         .onTapGesture {
             if natificationBar.isShowBar {
                 natificationBar.close()
             }
         }
-        .onChange(of: isLogin) { //监听登录，登录了开始刷数据
-            if isLogin {
-                BinanceApi.serverUsable(pingComplate: { res in
-                    print("ping result \(res)")
-                })
-                startSyncDataTask()
+        .onChange(of: user.usable) { //监听登录，
+            if user.usable {
+                //登录了，1.跳转到主页
+                ViewRouter.routeTo(newView: .HomePage)
+                
+               
             }
         }
-        .onDisappear{ //关闭刷数据任务
-            closeSyncDataTesk()
-        }
-    }
-    
-    /**
-    开始同步数据任务
-     */
-    func startSyncDataTask() {
-//        spotInfoSyncTimer.spotInfoSync()
-        
-        
-        spotInfoSyncTimer.startTimer()
-        accountInfoSyncTimer.startAccountSpotAssertSyncTimer()
-//        accountInfoSyncTimer.startAccountSpotDayHistorySyncTimer()
-    }
-    
-    /**
-     关闭同步任务
-     */
-    func closeSyncDataTesk() {
-        spotInfoSyncTimer.stopTimer()
-        accountInfoSyncTimer.stopAccountSpotAssertSyncTimer()
-//        accountInfoSyncTimer.stopAccountSpotDayHistorySyncTimer()
+       
     }
 }
 

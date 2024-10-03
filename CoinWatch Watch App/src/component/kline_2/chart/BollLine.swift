@@ -42,7 +42,10 @@ struct BollLine {
         return Path() { path in
             var x = entryWidth / 2
             lineDataEntryList.forEach{ entry in
-                //上轨
+                if entry.isPredictData {
+                    return
+                }
+                
                 lastPoint = addLine(path: &path, lastPoint: lastPoint, x: x, price: getPrice(entry))
                 x += entryWidth
             }

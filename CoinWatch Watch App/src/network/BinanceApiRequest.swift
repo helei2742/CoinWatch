@@ -12,6 +12,9 @@ import SwiftyJSON
 import CryptoKit
 
 public class BinanceApiRequest {
+    static let startTime = DateUtil.dateToTimestamp(date: Date())
+    static var ipWeight = 0
+    
     
     static func binanceApiRequest(
         method: HTTPMethod = .get,
@@ -25,7 +28,9 @@ public class BinanceApiRequest {
         isSignature: Bool
     ) -> Void{
         //TODO 计算更新ipWeight
-        
+        BinanceApiRequest.ipWeight += ipWeight
+        let t = Double(DateUtil.dateToTimestamp(date: Date())! - startTime! + 1)
+        print("ip weight [\(Double(BinanceApiRequest.ipWeight) / t)]")
         
         //必要参数
         var result:(url:String, body:[String:Any])? = nil

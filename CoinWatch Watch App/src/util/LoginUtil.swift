@@ -20,7 +20,7 @@ class LoginUtil {
         user.usable = true
     }
     
-    static func login(username username: String, password password: String, callback: (Bool) -> Void) {
+    static func login(username: String, password: String, callback: (Bool) -> Void) {
         //TODO 请求后端登录
         
         callback(true)

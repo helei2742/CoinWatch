@@ -188,6 +188,9 @@ struct KLineChart: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity
                             )
                             .background(Color("SystemBGColor").opacity(0.5))
+                        
+                        //最后一个k到y轴低线
+                        newLineDataPriceLine
                     }
                     
                     // 显示十字线以及按住的KLineItem的信息
@@ -361,27 +364,41 @@ struct KLineChart: View {
     /**
      最新价格到y轴的线
      */
-    //    @ViewBuilder
-    //    var newLineDataPriceLine: some View {
-    //        Path { path in
-    //            if let last = dataset.dataset.last{
-    //                let priceY = last.close * heightRatio - heightOffset
-    //                var priceX = Double(dataset.count) * lineItemWidth
-    //                priceX -= lineItemWidth / 2
-    //                priceX -= scrollViewOffset ?? 0
-    //
-    //                let rect = CGRect (
-    //                    x: priceX,
-    //                    y: priceY,
-    //                    width: windowWidth - priceX,
-    //                    height: 1
-    //                )
-    //
-    //                path.addRect(rect)
-    //            }
-    //        }
-    //    }
-    
+    @ViewBuilder
+    var newLineDataPriceLine: some View {
+        //取第一预测数据的index
+        let lastIdx:Int = (dataset.dataset.firstIndex { entry in
+            entry.isPredictData
+        } ?? 0) - 1
+        
+        if lastIdx >= 0 && lastIdx < dataset.count {
+            let last = dataset.dataset[lastIdx]
+            
+            let priceY = last.close * Double(heightRatio) - heightOffset
+            //let  priceX = Double(lastIdx) * lineItemWidth + lineItemWidth/2
+            
+            
+            Path { path in
+                path.move(to: CGPoint(x:0, y: priceY))
+                path.addLine(to: CGPoint(x: windowWidth, y: priceY))
+            }
+            .stroke(style: StrokeStyle(lineWidth: 1, dash: [5, 3]))
+            .scaleEffect(x:1,y:-1)
+            .overlay{
+                Text(String(format:"%.2f", last.close))
+                    .font(.littleFont())
+                    .padding(3)
+                    .background(Color("NormalBGColor").opacity(0.5))
+                    .foregroundColor(Color("SystemFontColor"))
+                    .clipShape(RoundedRectangle(cornerRadius: 3))
+                    .frame(width: 50)
+                    .position(x: windowWidth - 20,y:windowHeight - priceY)
+            }
+            
+            
+        }
+    }
+
     /**
      长按k线中的元素后展示的十字线和信息卡
      */
@@ -499,8 +516,10 @@ struct KLineChart: View {
         }
         .scrollTargetLayout()
         .overlay(
-            //K线上显示的所有额外图表
-            dynamicExtraChartPrinter
+            ZStack {
+                //K线上显示的所有额外图表
+                dynamicExtraChartPrinter
+            }
         )
         .overlay(   //X 轴
             VStack {
@@ -640,7 +659,7 @@ struct KLineChart: View {
 //            let end = (windowStartIndex ?? 0) + viewKLineItemCount
 //            windowEndIndex = end >= dataset.count ? dataset.count - 1: end
             windowStartIndex = Int(newOffset/lineItemWidth)
-            var end = Int((newOffset + windowWidth)/lineItemWidth)
+            let end = Int((newOffset + windowWidth)/lineItemWidth)
             windowEndIndex = end >= dataset.count ? end - 1: end
         } else {
             windowStartIndex = nil
@@ -731,9 +750,9 @@ struct KLineChart: View {
 
 
 #Preview {
-    //       let lineDataEntry = LineDataEntry(openTime: Date(), closeTime: Date(), open: 100, close: 120, high: 131, low: 98, volume: 1000)
-    var state:ChartPrintState = .K_MA_LINE
-    @State var kline:KLineInterval = .M_1
+    @Previewable @State var kline:KLineInterval = .M_1
+    let state:ChartPrintState = .K_MA_LINE
+   
     KLineChart(
         symbol: "BTCUSDT",
         kLineInterval: $kline,

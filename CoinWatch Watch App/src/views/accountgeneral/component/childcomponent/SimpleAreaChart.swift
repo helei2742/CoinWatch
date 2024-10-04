@@ -28,57 +28,66 @@ struct SimpleAreaChart: View {
     }
     
     var body: some View {
-        ZStack{
-            HStack{
-                
-                VStack{
+        GeometryReader { geo in
+            ZStack{
+                HStack{
+                    VStack{
+                        Text("资产变化")
+                            .padding(10)
+                            .font(.defaultFont())
+                            .foregroundStyle(Color("SystemFontColor"))
+                        Spacer()
+                    }
                     
-                    Text("资产变化")
-                        .padding(10)
-                        .font(.defaultFont())
-                        .foregroundStyle(Color("SystemFontColor"))
                     Spacer()
                 }
+                let maxAndmin = culculateMaxAndMin()
                 
-                Spacer()
-            }
-            
-            
-            Chart(modelData.spotTotalValueDayHistory, id: \.date) { element in
-                LineMark (
-                    x: .value("日期", element.date, unit: .day),
-                    y: .value("美元", element.spotTotalValue.coinPriceFormat())
-                )
-                .foregroundStyle(Color.orange)
-//                .symbolSize(8)
-                
-                AreaMark (
-                    x: .value("日期", element.date, unit: .day),
-                    y: .value("美元", element.spotTotalValue)
-                )
-                .foregroundStyle(Color.orange.opacity(0.6))
-                
-                if let rawSelectDate {
-                    RuleMark (
-                        x: .value("selected", rawSelectDate, unit: .day)
+                Chart(modelData.spotTotalValueDayHistory, id: \.date) { element in
+                    LineMark (
+                        x: .value("日期", element.date, unit: .day),
+                        y: .value("美元", element.spotTotalValue.coinPriceFormat())
                     )
-                    .foregroundStyle(Color.blue.opacity(0.1))
-                    .zIndex(-1)
-                    .annotation(
-                        position: .top, spacing: 0,
-                        overflowResolution: .init(
-                            x: .fit(to: .chart),
-                            y: .disabled
+                    .foregroundStyle(Color.orange)
+    //                .symbolSize(8)
+                    
+                    AreaMark (
+                        x: .value("日期", element.date, unit: .day),
+                        y: .value("美元", element.spotTotalValue)
+                    )
+                    .foregroundStyle(Color.orange.opacity(0.6))
+                    
+                    if let rawSelectDate {
+                        RuleMark (
+                            x: .value("selected", rawSelectDate, unit: .day)
                         )
-                    ) {
-                        valueSelectionPopover
+                        .foregroundStyle(Color.blue.opacity(0.1))
+                        .zIndex(-1)
+                        .annotation(
+                            position: .top, spacing: 0,
+                            overflowResolution: .init(
+                                x: .fit(to: .chart),
+                                y: .disabled
+                            )
+                        ) {
+                            valueSelectionPopover
+                        }
+                    }
+                    
+                }
+                .frame(width: geo.size.width)
+                .chartYScale(domain: maxAndmin.min...maxAndmin.max)
+                .chartXSelection(value: $rawSelectDate)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) { value in
+                        if value.as(Date.self) != nil {
+                            AxisGridLine()
+                            AxisTick()
+                            AxisValueLabel(format: .dateTime.day().hour()) // 时间刻度
+                        }
                     }
                 }
-                
             }
-            
-            .chartYAxis(.hidden)
-            .chartXSelection(value: $rawSelectDate)
         }
     }
     
@@ -117,6 +126,20 @@ struct SimpleAreaChart: View {
             Text("error")
             EmptyView()
         }
+    }
+    
+    func culculateMaxAndMin() -> (max:Double, min:Double) {
+        if modelData.spotTotalValueDayHistory.isEmpty {
+            return (0, 0)
+        }
+        var maxP = modelData.spotTotalValueDayHistory[0].spotTotalValue
+        var minP = modelData.spotTotalValueDayHistory[0].spotTotalValue
+        modelData.spotTotalValueDayHistory.forEach { info in
+            maxP = max(maxP, info.spotTotalValue)
+            minP = min(minP, info.spotTotalValue)
+        }
+        
+        return (max:maxP, min:minP)
     }
     
 }

@@ -16,16 +16,22 @@ class MarketData {
     private var quote: CoinUnit = AccountGeneralModelData.sharedInstance.spotUnit
     
     /**
-     全量数据
+     全量现货数据
      */
-    var allData:[MarketDataItem]
+    var allSpotData:[MarketDataItem]
     
     /**
-     成交值前100
+     全量合约数据
      */
-    var hot100:[MarketDataItem] {
+    var allContractData:[MarketDataItem]
+    
+    /**
+     现货成交值前100
+     */
+    var spotHot100:[MarketDataItem]
+    {
         get {
-            let res = allData.sorted {
+            let res = allSpotData.sorted {
                 $0.weightedAvgPrice * $0.volume > $1.weightedAvgPrice * $1.volume
             }
             .prefix(100)
@@ -34,12 +40,13 @@ class MarketData {
     }
     
     /**
-     涨幅前100
+     现货涨幅前100
      */
-    var rise100:[MarketDataItem] {
+    var spotRise100:[MarketDataItem]
+    {
         get {
-            let res = allData.sorted {
-                $0.priceChange > $1.priceChange
+            let res = allSpotData.sorted {
+                $0.priceChangePercent > $1.priceChangePercent
             }
             .prefix(100)
             return Array(res)
@@ -47,12 +54,13 @@ class MarketData {
     }
     
     /**
-     跌幅100
+     现货跌幅100
      */
-    var fall100:[MarketDataItem] {
+    var spotFall100:[MarketDataItem]
+    {
         get {
-            let res = allData.sorted {
-                $0.priceChange < $1.priceChange
+            let res = allSpotData.sorted {
+                $0.priceChangePercent < $1.priceChangePercent
             }
             .prefix(100)
             return Array(res)
@@ -60,41 +68,65 @@ class MarketData {
     }
     
     private init() {
-        allData = []
+        allSpotData = []
+        allContractData = []
     }
     
     
     /**
      网络请求加载全量的市场数据
      */
-    func loadMarketData(whenComplate: @escaping (Bool) -> Void) {
+    func loadSpotMarketData(whenComplate: @escaping (Bool) -> Void) {
         BinanceApi.spotApi.allCoin24HrList { data in
-            if data == nil {
-                whenComplate(false)
-                return
-            }
-            
-            if let jsonarr = data!.array {
-                self.allData.removeAll()
-                
-                
-                jsonarr.forEach { item in
-                    //只去特定的
-                    if item["symbol"].stringValue.hasSuffix(self.quote.rawValue) {
-                        self.allData.append(self.jsonToMarketDataItem(json: item))
-                    }
-                }
-                
-                
+            if let data = data {
+                self.resolveSpotMarketData(data: data)
                 whenComplate(true)
+            }else {
+                whenComplate(false)
             }
         }
     }
     
+    func resolveSpotMarketData(data: JSON) {
+        var list:[MarketDataItem] = []
+        if let jsonarr = data.array {
+            jsonarr.forEach { item in
+                //只取固定后缀的
+                if item["symbol"].stringValue.hasSuffix(self.quote.rawValue) {
+                    list.append(self.jsonToMarketDataItem(json: item, symbolType: .spot))
+                }
+            }
+        }
+        self.allSpotData.removeAll()
+        self.allSpotData.append(contentsOf: list)
+        
+//        //热度 100
+//        self.hot100.removeAll()
+//        let hot100 = list.sorted {
+//            $0.weightedAvgPrice * $0.volume > $1.weightedAvgPrice * $1.volume
+//        } .prefix(100)
+//        self.hot100.append(contentsOf: hot100)
+//        
+//        //涨幅 100
+//        self.rise100.removeAll()
+//        let rise100 = list.sorted {
+//            $0.priceChangePercent > $1.priceChangePercent
+//        }.prefix(100)
+//        self.rise100.append(contentsOf: rise100)
+//        
+//        //跌幅 100
+//        self.fall100.removeAll()
+//        let fall100 = list.sorted {
+//            $0.priceChangePercent < $1.priceChangePercent
+//        }.prefix(100)
+//        self.fall100.append(contentsOf: fall100)
+    }
+    
+    
     /**
      解析json转换为MarketDataItem
      */
-    func jsonToMarketDataItem(json: JSON) -> MarketDataItem{
+    func jsonToMarketDataItem(json: JSON, symbolType:SymbolType) -> MarketDataItem{
         let symbol = json["symbol"].stringValue
         return MarketDataItem(
             symbol: symbol,
@@ -110,7 +142,8 @@ class MarketData {
             volume: json["volume"].doubleValue,
             quoteVolume: json["quoteVolume"].doubleValue,
             openTime: DateUtil.timestarpToDate(timestamp: Double(json["openTime"].intValue)),
-            closeTime: DateUtil.timestarpToDate(timestamp: Double(json["closeTime"].intValue))
+            closeTime: DateUtil.timestarpToDate(timestamp: Double(json["closeTime"].intValue)),
+            symbolType: symbolType
         )
     }
     
@@ -119,13 +152,30 @@ class MarketData {
      */
     func selectMarketTypeData(marketPrintType: MarketPrintType) -> [MarketDataItem] {
         switch marketPrintType {
-        case .hot100:
-            return hot100
-        case .rise100:
-            return rise100
-        case .fall100:
-            return fall100
+        case .spotHot100:
+            return spotHot100
+        case .spotRise100:
+            return spotRise100
+        case .spotFall100:
+            return spotFall100
         }
+    }
+    
+    /**
+     根据symbol查找MarketDataItem数据
+     */
+    func selectItem(symbol: String, symbolType:SymbolType) -> MarketDataItem? {
+        switch symbolType {
+        case .spot:
+            allSpotData.first { item in
+                item.symbol == symbol
+            }
+        case .contract:
+            allContractData.first { item in
+                item.symbol == symbol
+            }
+        }
+        
     }
 }
 
@@ -161,6 +211,8 @@ struct MarketDataItem: Identifiable {
     
     let closeTime: Date
     
+    var symbolType: SymbolType? = nil
+    
     func newPrice() -> Double {
         return lastPrice + priceChange
     }
@@ -177,9 +229,9 @@ enum MarketType: CaseIterable {
 }
 
 enum MarketPrintType: CaseIterable{
-    case hot100
-    case rise100
-    case fall100
+    case spotHot100
+    case spotRise100
+    case spotFall100
     
     func next() -> MarketPrintType {
         let allCases = MarketPrintType.allCases

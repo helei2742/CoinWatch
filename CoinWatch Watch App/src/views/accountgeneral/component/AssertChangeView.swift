@@ -17,6 +17,7 @@ struct AssertChangeView: View {
             SimpleAreaChart(rawSelectDate: $day)
                 .environmentObject(modelData)
                 .frame(width: geometry.size.width,height: geometry.size.height)
+                .padding(0)
         }
     }
 }

@@ -61,15 +61,15 @@ struct DeepInfoCard: View {
                             x: .value("selected", rawSelectX)
                         )
                         .foregroundStyle(Color.blue.opacity(0.1))
-                        .annotation(
-                            position: .top, spacing: 0,
-                            overflowResolution: .init(
-                                x: .fit(to: .chart),
-                                y: .disabled
-                            )
-                        ) {
-                            valueSelectionPopover
-                        }
+//                        .annotation(
+//                            position: .top, spacing: 0,
+//                            overflowResolution: .init(
+//                                x: .fit(to: .chart),
+//                                y: .disabled
+//                            )
+//                        ) {
+//                            valueSelectionPopover
+//                        }
                     }
                 }
                 .chartXScale(domain: [deepArray[0].price,

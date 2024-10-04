@@ -425,7 +425,7 @@ class SpotApi {
         type: ApiResponseType? = .FULL,
         successCall: @escaping (JSON) -> Void
     ) -> Void {
-        var ipWeight = symbols.count > 50 ? 200 : 4 * symbols.count
+        let ipWeight = symbols.count > 50 ? 200 : 4 * symbols.count
         
         
         BinanceApiRequest.binanceApiRequest(

@@ -22,6 +22,7 @@ struct ExtraArea {
     
     @Binding var windowEndIndex: Int?
     
+    @Binding var scrollViewOffset: Double?
 
     
     @ViewBuilder
@@ -54,7 +55,7 @@ struct ExtraArea {
     func buildShape(isUp: Bool) -> Path? {
         if let retio = calHeightRetio() {
             return Path { path in
-                var x:Double = -lineItemWidth/2
+                var x:Double = Double(windowStartIndex ?? 0) * lineItemWidth - (scrollViewOffset ?? 0)
                 for idx in (windowStartIndex!...windowEndIndex!){
                     let lineData = lineDataList[idx]
                     if isUp && lineData.close < lineData.open {

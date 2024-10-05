@@ -219,7 +219,8 @@ struct KLineChart: View {
                     windowWidth: $windowWidth,
                     lineDataList: $dataset.dataset,
                     windowStartIndex: $windowStartIndex,
-                    windowEndIndex: $windowEndIndex
+                    windowEndIndex: $windowEndIndex,
+                    scrollViewOffset: $scrollViewOffset
                 )
                 .content
                 .scaleEffect(x:1,y:-1)

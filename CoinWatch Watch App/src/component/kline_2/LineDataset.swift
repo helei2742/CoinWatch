@@ -14,6 +14,9 @@ import SwiftyJSON
  */
 @Observable
 class LineDataset {
+    
+    private var refreshTimer:Timer? = nil
+    
 
     /**
      币种名称，如 BTCUSDT
@@ -40,6 +43,12 @@ class LineDataset {
         具体的数据
     */
     var dataset: [LineDataEntry]
+    
+    
+    /**
+     dataset后面添加的预测数据的个数
+     */
+    var pridictDataCount: Int = 5
 
 
     /**
@@ -91,35 +100,81 @@ class LineDataset {
     */
     var startTime:Date = Date()
     
-
+    /**
+     开启刷新k显示数据的Timer
+     */
+    func startRefresh(whenComplate: @escaping (Bool, Int) -> Void) {
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+            self.refreshNewLineData(whenComplate: whenComplate)
+        }
+    }
+    
+    /**
+     关闭刷新k线数据的timer
+     */
+    func stopRefresh() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
+    }
+    
     /**
         刷新最新的k线数据，也就是dataset数组里的最后一个的数据
     */
-    func refreshNewLineData() -> Void {
+    func refreshNewLineData(whenComplate: @escaping (Bool, Int) -> Void) -> Void {
         if dataset.isEmpty {
             print("刷新k线数据失败，当前数据集为null")
             return
         }
-        let startTime: Date = dataset.last!.openTime
+        
+        let lastIdx = (self.dataset.firstIndex { entry in
+            entry.isPredictData
+        } ?? 0) - 1
+        
+        let startTime: Date = DateUtil.calDate(
+            from: lastIdx < 0 ? Date() : self.dataset[lastIdx].openTime,
+            count: -1 * kLineInterval.rawValue.interval,
+            timeUnit: kLineInterval.rawValue.timeUnit
+        )!
 
         loadLineData(
             startTime: startTime,
-            limit: 1,
+            limit: 10,
             actionOfNewData:{ newData in
                 if newData.isEmpty {
                     print("最新的k线数据为null，startTime:\(self.startTime), kLineInterval:\(self.kLineInterval)")
+                    whenComplate(false, 0)
                     return
                 }
                 if self.dataset.isEmpty {
                     print("数据集信息为null,")
+                    whenComplate(false, 0)
                     return
                 }
-                
 
-                self.dataset[self.dataset.count - 1] = newData[0]
+                var count:Int = 0
+                newData.forEach { new in
+                    let oldIdx:Int? = self.dataset.firstIndex(where: { item in
+                        new.openTime == item.openTime
+                    })
+                    
+                    if oldIdx != nil && !self.dataset[oldIdx!].isPredictData {
+                        //换掉旧的
+                        self.dataset[oldIdx!] = new
+                        self.dataset.append(contentsOf: newData)
+                    } else {
+                        //新的
+                        //插入一条,后续会排序，顺序不重要
+                        self.dataset.append(newData[0])
+                        count += 1
+                    }
+                }
+               
+                whenComplate(true, count)
             },
-            whenComplate: { res in
-
+            whenComplate: {res in
+                if res == false {
+                    whenComplate(false, 0)
+                }
             }
         )
     }
@@ -187,7 +242,7 @@ class LineDataset {
                 self.dataset.sort(by:{$0.openTime < $1.openTime})
                 var seen = [LineDataEntry]()
                 var uniqueArray = self.dataset.filter { item in
-                    if seen.contains(item) {
+                    if seen.contains(item) || item.isPredictData {
                         return false
                     } else {
                         seen.append(item)
@@ -198,7 +253,7 @@ class LineDataset {
                 //添加预测数据
                 if let last = uniqueArray.last {
                     if !last.isPredictData {
-                        uniqueArray.append(contentsOf: self.loadPridictData(startDate: last.closeTime))
+                        uniqueArray.append(contentsOf: self.loadPridictData(startDate: last.openTime))
                     }
                 }
                 
@@ -208,7 +263,8 @@ class LineDataset {
                 //更新count，max，min等
                 self.count = self.dataset.count
 
-                if self.count != 0 {
+                //没传入startTime，需要维护这个
+                if startTime == nil && self.count != 0 {
                     //更新startTime
                     self.startTime = self.getStartTime(endTime: self.startTime)
                 }
@@ -229,8 +285,8 @@ class LineDataset {
      */
     func loadPridictData(startDate: Date) -> [LineDataEntry] {
         var arr:[LineDataEntry] = []
-        var open = startDate
-        for _ in (0...5) {
+        var open = DateUtil.calDate(from: startDate, count: kLineInterval.rawValue.interval, timeUnit: kLineInterval.rawValue.timeUnit)!
+        for _ in (1...pridictDataCount) {
             let close = DateUtil.calDate(from: open, count: kLineInterval.rawValue.interval, timeUnit: kLineInterval.rawValue.timeUnit)!
             arr.append(LineDataEntry(
                 openTime: open,

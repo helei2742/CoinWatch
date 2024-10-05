@@ -49,56 +49,56 @@ struct CoinDetailWindow: View {
      */
     @State var kLineInterval: KLineInterval = .d_1
     
-    
-    
     var body: some View {
-        GeometryReader { geometry in
-            
-            HStack(spacing:2) {
+        NavigationView {
+            GeometryReader { geometry in
                 
-                //坐标区域
-                nameAndDeepGraph
-                    .frame(width: geometry.size.width*0.3,height:geometry.size.height)
-                    .background(Color("NormalBGColor").opacity(0.6))
-                
-                VStack { //右边区域
-                    //顶部工具栏
-                    topToolbar
-                        .background(Color("NormalBGColor").opacity(0.6))
+                VStack(spacing:0) {
+                    HStack(spacing:0){
+                        //左边区域
+                        deepGraph
+                                                
+                        //中间k线图
+                        KLineChart(
+                            symbol: CommonUtil.generalCoinSymbol(
+                                base: coinInfo.base,quote: coinInfo.quote
+                            ),
+                            kLineInterval: $kLineInterval,
+                            maIntervals: [MAType.ma_15, MAType.ma_20],
+                            getPrintState: {
+                                chartPrintState
+                            }
+                        )
                         .frame(width: geometry.size.width*0.7)
-                        .edgesIgnoringSafeArea(.top)
-                        .frame(height: 0)
-                   
-                    //中间k线图
-                    KLineChart(
-                        symbol: CommonUtil.generalCoinSymbol(
-                            base: coinInfo.base,quote: coinInfo.quote
-                        ),
-                        kLineInterval: $kLineInterval,
-                        maIntervals: [MAType.ma_15, MAType.ma_20],
-                        getPrintState: {
-                            chartPrintState
-                        }
-                    )
-                    .frame(height: geometry.size.height * 0.85)
-                    Spacer()
-//                    //底部挂单情况
-//                    VStack{
-//                        Text("显示用户仓位和挂单")
-//                    }
-//                    .frame(height: geometry.size.height * 0.2)
-//                    .background(Color("NormalBGColor").opacity(0.6))
+                    }
                 }
-                //                .ignoresSafeArea()
-                .frame(width: geometry.size.width*0.7,height:geometry.size.height)
-            }
-            .font(.defaultFont())
-            .onAppear{
-                isLoadingDeep = true
-                
-                coinInfo.loadDeepInfo { res in
-                    print("loadsuccess")
-                    isLoadingDeep = false
+                .font(.defaultFont())
+                .navigationTitle(
+                    Text("\(coinInfo.base)")
+                )
+                .toolbar{
+                    ToolbarItem(placement: .topBarLeading) {
+                        KLineIntervalPicker(kLineInterval: $kLineInterval)
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+//                        topToolbar
+                        KLineTypeIcon(chartPrintState: $chartPrintState, clickCallBack: { cur in
+                            chartPrintState = chartPrintState.next()
+                            print(chartPrintState)
+                        })
+                    }
+                    
+                    ToolbarItem(placement: .bottomBar) {
+                        fullScreenButton
+                    }
+                }
+                .onAppear{
+                    isLoadingDeep = true
+                    
+                    coinInfo.loadDeepInfo { res in
+                        print("loadsuccess")
+                        isLoadingDeep = false
+                    }
                 }
             }
         }
@@ -108,47 +108,9 @@ struct CoinDetailWindow: View {
     名字和深度图
      */
     @ViewBuilder
-    var nameAndDeepGraph: some View {
+    var deepGraph: some View {
         VStack(spacing:0){
-            //图标和名称
-            //                    CoinImage(imageUrl: CommonUtil.getCoinLogoImageUrl(base: coinInfo.base))
-            //                    .frame(width: geometry.size.width*0.12,height: geometry.size.width*0.12)
-            //                    .edgesIgnoringSafeArea(.top)
-            //                    .background(.red)
-            
-            VStack {
-                Spacer()
-                
-                Text("\(coinInfo.base)")
-                    .padding(0)
-                    .font(.largeFont())
-                    .lineLimit(1)
-                Spacer()
-//                HStack{
-//                    Text("成交量")
-//                        .font(.littleFont())
-//                        .padding(0)
-//                        .lineLimit(1)
-//                    Text("200万")
-//                        .font(.littleFont())
-//                        .padding(0)
-//                        .lineLimit(1)
-//                }
-//                
-//                HStack{
-//                    Text("净流入")
-//                        .font(.littleFont())
-//                        .padding(0)
-//                        .lineLimit(1)
-//                    Text("100万")
-//                        .font(.littleFont())
-//                        .padding(0)
-//                        .lineLimit(1)
-//                }
-            }
-            .padding(.bottom)
-            
- 
+            Divider()
                 //深度图
             DeepInfoCard(
                 rawSelectX: $selectAsks,
@@ -162,6 +124,8 @@ struct CoinDetailWindow: View {
                 }
             }
             
+            Divider()
+            
             DeepInfoCard(
                 rawSelectX: $selectDids,
                 deepDirection: .BIDS,
@@ -173,40 +137,11 @@ struct CoinDetailWindow: View {
                     ProgressView()
                 }
             }
-            
-
-            Spacer()
+            Divider()
         }
-        .ignoresSafeArea()
         .padding(.trailing, 1)
     }
     
-    
-    
-    @ViewBuilder
-    var topToolbar: some View {
-        GeometryReader { geometry in
-            VStack{
-                Spacer()
-                HStack(spacing: 2){
-                    
-                    //选择k线间隔
-                    KLineIntervalPicker(kLineInterval: $kLineInterval)
-                    
-                    // 切换显示类型，选择显示的类型，
-                    KLineTypeIcon(chartPrintState: $chartPrintState, clickCallBack: { cur in
-                        chartPrintState = chartPrintState.next()
-                        print(chartPrintState)
-                    })
-                    
-                    fullScreenButton
-                    Spacer()
-                }
-                Spacer()
-            }
-            .padding(.top, 2)
-        }
-    }
     
     @ViewBuilder
     var fullScreenButton: some View {
@@ -223,6 +158,7 @@ struct CoinDetailWindow: View {
                 .frame(width: 20, height: 20)
                 .scaledToFit()
         }
+        .buttonStyle(SelectButtonStyle())
         .background(Color("MetricIconBGColor"))
         .frame(width: 20, height: 20)
         .clipShape(
@@ -242,6 +178,8 @@ struct CoinDetailWindow: View {
             )
         }
     }
+    
+    
     func printDeepInfo(selectedData: DeepInfoPoint?) -> Bool {
         if let selectedData {
             natificationBar.printContent(content: ["price: \(selectedData.price.coinPriceFormat())", "volume: \(selectedData.volume)"])

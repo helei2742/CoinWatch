@@ -34,7 +34,7 @@ struct YAxisLine: Shape {
     /**
        窗口高度
      */
-    let windowHeight: CGFloat
+    let scrollAreaHeight: CGFloat
     
     /**
        窗口宽度
@@ -61,11 +61,11 @@ struct YAxisLine: Shape {
             let width:CGFloat = rect.width
                         
             //画轴线
-            path.move(to: CGPoint(x: width - 2, y: windowHeight))
+            path.move(to: CGPoint(x: width - 2, y: scrollAreaHeight))
             path.addLine(to: CGPoint(x: width - 2, y: 0))
             
             //画刻度
-            let interval:CGFloat = windowHeight / Double(scaleNumber)
+            let interval:CGFloat = scrollAreaHeight / Double(scaleNumber)
             
             let numbers: [Int] = Array(0...scaleNumber)
             numbers.forEach { i in

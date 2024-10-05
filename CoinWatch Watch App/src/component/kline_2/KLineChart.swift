@@ -50,6 +50,10 @@ struct KLineChart: View {
      */
     @State private var isLoadingKLineData: Bool = false
     
+    /**
+     是否显示警告
+     */
+    @State private var isShowAlert:Bool = false
     
     /**
      K线视图的Position， 可用于滚动到指定位置
@@ -185,8 +189,7 @@ struct KLineChart: View {
                     
                     if dataset.count > 0 {
                         kLineScrollArea
-                            .frame(maxWidth: .infinity, maxHeight: .infinity
-                            )
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .background(Color("SystemBGColor").opacity(0.5))
                         
                         //最后一个k到y轴低线
@@ -199,8 +202,9 @@ struct KLineChart: View {
                             longPressPrintView
                         }
                     }
-                    
                 }
+                
+                
                 ExtraArea(
                     height: $extraAreaHeight,
                     lineItemWidth: $lineItemWidth,
@@ -212,6 +216,9 @@ struct KLineChart: View {
                 .content
                 .scaleEffect(x:1,y:-1)
                 .frame(width: windowWidth, height: extraAreaHeight)
+                
+                Divider()
+                
                 Spacer()
             }
             .onAppear{
@@ -223,7 +230,7 @@ struct KLineChart: View {
                 lineItemWidth = windowWidth / Double(viewKLineItemCount) - marginOfLineItem
                 
                 scrollAreaWidth = windowWidth
-                scrollAreaHeight = windowHeight
+                scrollAreaHeight = windowHeight - extraAreaHeight
                 
                 isLoadingKLineData = true
                 
@@ -242,6 +249,26 @@ struct KLineChart: View {
                 loadLineDataNetwork(beforeSuccessComplate: {
                     scrollToLast()
                 })
+            }
+            .alert(isPresented: $isShowAlert) {
+                    Alert(
+                        title: Text("网络连接错误"),
+                        message: Text("无法获取到k线数据，请检查您的网络连接或重试"),
+                        primaryButton: .default(
+                            Text("重试"),
+                            action: {
+                                loadLineDataNetwork(beforeSuccessComplate: {
+                                    scrollToLast()
+                                })
+                            }
+                        ),
+                        secondaryButton: .destructive(
+                            Text("关闭"),
+                            action: {
+                                stopRefreshLineData()
+                            }
+                        )
+                    )
             }
         }
         
@@ -392,7 +419,7 @@ struct KLineChart: View {
                     .foregroundColor(Color("SystemFontColor"))
                     .clipShape(RoundedRectangle(cornerRadius: 3))
                     .frame(width: 50)
-                    .position(x: windowWidth - 20,y:windowHeight - priceY)
+                    .position(x: windowWidth - 20,y: scrollAreaHeight - priceY)
             }
             
             
@@ -415,7 +442,7 @@ struct KLineChart: View {
         //点击的坐标在左边还是右边
         let clickWindowLeft:Bool = xPosition < windowWidth/2
         //点击的坐标在左边还是右边
-        let clickWindowTop:Bool = yPosition < windowHeight/2
+        let clickWindowTop:Bool = yPosition < scrollAreaHeight/2
         
         
         let index = Int((xPosition + scrollViewOffset!) / lineItemWidth)
@@ -454,7 +481,7 @@ struct KLineChart: View {
             
             let cardX = clickWindowLeft ? xPosition + 3 : max(xPosition - windowWidth/3, 0)
             
-            let cardY = clickWindowTop ? yPosition : yPosition - windowHeight/3
+            let cardY = clickWindowTop ? yPosition : yPosition - scrollAreaHeight/3
             
             
             
@@ -593,7 +620,7 @@ struct KLineChart: View {
                 Spacer()
                 //Y轴线
                 YAxisLine(
-                    windowHeight: windowHeight,
+                    scrollAreaHeight: scrollAreaHeight,
                     windowWidth: windowWidth,
                     heightRatio: heightRatio,
                     heightOffset: heightOffset,
@@ -605,7 +632,7 @@ struct KLineChart: View {
                 )
                 .frame(
                     width: windowWidth,
-                    height: windowHeight
+                    height: scrollAreaHeight
                 )
             }
         )
@@ -652,25 +679,27 @@ struct KLineChart: View {
         }
         
         
+        updateWindowState(newOffset: newOffset)
+    }
+    
+    func updateWindowState(newOffset: Double) {
         //更新窗口
         if newOffset >= 0 {
-//            let start = Int(newOffset/lineItemWidth)
-//            windowStartIndex = start < 0 ? 0 : start
-//            let end = (windowStartIndex ?? 0) + viewKLineItemCount
-//            windowEndIndex = end >= dataset.count ? dataset.count - 1: end
-            windowStartIndex = Int(newOffset/lineItemWidth)
-            let end = Int((newOffset + windowWidth)/lineItemWidth)
-            windowEndIndex = end >= dataset.count ? end - 1: end
+            if lineItemWidth != 0 {
+                windowStartIndex = Int(newOffset/lineItemWidth)
+                let end:Int = Int((newOffset + windowWidth)/lineItemWidth)
+                windowEndIndex = end >= dataset.count ? dataset.count - 1: end
+            }
         } else {
             windowStartIndex = nil
             windowEndIndex = nil
         }
        
-        
-        //更新高度比和偏移
-        updateHeightRatioAndOffset(windowStart: windowStartIndex!)
+        if let windowStartIndex = windowStartIndex {
+            //更新高度比和偏移
+            updateHeightRatioAndOffset(windowStart: windowStartIndex)
+        }
     }
-    
     /**
      网络请求加载数据，并处理相应的状态
      */
@@ -696,9 +725,40 @@ struct KLineChart: View {
                 dataset.calculateBoll(maInterval: 21, n:2)
                 
                 //刷新
-                updateViewModel()
+//                updateViewModel()
+                startRefreshLineData()
             }
         }
+    }
+    
+    /**
+     开始刷新k线数据
+     */
+    func startRefreshLineData() {
+        //开始刷k线数据
+        dataset.startRefresh { (res, count) in
+            if !res {
+                stopRefreshLineData()
+                isShowAlert = true
+            } else {
+                scrollAreaWidth = Double(dataset.count) * lineItemWidth
+                updateWindowState(newOffset: scrollViewOffset! + Double(count) * lineItemWidth)
+
+                if count > 0 {
+                    //算ma
+                    dataset.calculateMA(maIntervals: maIntervals)
+                    //算boll
+                    dataset.calculateBoll(maInterval: 21, n:2)
+                }
+            }
+        }
+    }
+    
+    /**
+     停止刷新数据
+     */
+    func stopRefreshLineData() {
+        dataset.stopRefresh()
     }
     
     
@@ -718,7 +778,7 @@ struct KLineChart: View {
         //移动后要计算最大值和最小值
         //        print("更新前 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")
         dataset.calMaxMinPriceOfWindow(start: windowStart)
-        heightRatio = windowHeight / (dataset.maxPrice - dataset.minPrice)
+        heightRatio = scrollAreaHeight / (dataset.maxPrice - dataset.minPrice)
         heightOffset = dataset.minPrice * heightRatio
         
         //        print("更新完毕 maxprice \(dataset.maxPrice), minprice \(dataset.minPrice),heightRatio \(heightRatio), heightOffset \(heightOffset)")

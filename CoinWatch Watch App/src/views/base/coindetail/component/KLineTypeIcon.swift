@@ -33,6 +33,7 @@ struct KLineTypeIcon: View {
                 .frame(width: 20, height: 20)
                 .scaledToFit()
         }
+        .buttonStyle(SelectButtonStyle())
         .background(Color("MetricIconBGColor"))
         .frame(width: 20, height: 20)
         .clipShape(

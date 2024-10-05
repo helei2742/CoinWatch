@@ -22,7 +22,6 @@ struct ExtraArea {
     
     @Binding var windowEndIndex: Int?
     
-    
 
     
     @ViewBuilder
@@ -88,9 +87,11 @@ struct ExtraArea {
         if windowStartIndex == nil || windowEndIndex == nil {
             return nil
         }
+        let end = min(windowEndIndex!, lineDataList.count - 1)
+        
         
         var maxVol: Double = 0
-        for idx in (windowStartIndex!...windowEndIndex!) {
+        for idx in (windowStartIndex!...end) {
             maxVol = max(maxVol, lineDataList[idx].volume)
         }
         

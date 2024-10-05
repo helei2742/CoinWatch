@@ -26,6 +26,7 @@ struct KLineIntervalPicker: View {
                 .background(Color("MetricIconBGColor"))
         }
         .padding(0)
+        .buttonStyle(SelectButtonStyle())
         .frame(width: 35, height: 20)
         .clipShape(
             RoundedRectangle(cornerRadius: 2)

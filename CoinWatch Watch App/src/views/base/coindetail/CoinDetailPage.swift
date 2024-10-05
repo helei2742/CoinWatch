@@ -18,12 +18,7 @@ struct CoinDetailPage: View {
     var body: some View {
         ZStack {
             CoinDetailWindow(coinInfo: $coinInfo)
-            
-//            BackButton(width: 20)
-//                .ignoresSafeArea()
-//                .position(x: 40, y: 0)
         }
-        .frame(width: .infinity, height: .infinity)
         .gesture(
             DragGesture()
                 .onEnded { gesture in

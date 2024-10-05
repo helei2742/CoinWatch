@@ -103,7 +103,7 @@ class LineDataset {
     /**
      开启刷新k显示数据的Timer
      */
-    func startRefresh(whenComplate: @escaping (Bool, Int) -> Void) {
+    func startRefresh(whenComplate: @escaping (Bool, Int, Double) -> Void) {
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
             self.refreshNewLineData(whenComplate: whenComplate)
         }
@@ -120,7 +120,7 @@ class LineDataset {
     /**
         刷新最新的k线数据，也就是dataset数组里的最后一个的数据
     */
-    func refreshNewLineData(whenComplate: @escaping (Bool, Int) -> Void) -> Void {
+    func refreshNewLineData(whenComplate: @escaping (Bool, Int, Double) -> Void) -> Void {
         if dataset.isEmpty {
             print("刷新k线数据失败，当前数据集为null")
             return
@@ -142,16 +142,17 @@ class LineDataset {
             actionOfNewData:{ newData in
                 if newData.isEmpty {
                     print("最新的k线数据为null，startTime:\(self.startTime), kLineInterval:\(self.kLineInterval)")
-                    whenComplate(false, 0)
+                    whenComplate(false, 0, 0)
                     return
                 }
                 if self.dataset.isEmpty {
                     print("数据集信息为null,")
-                    whenComplate(false, 0)
+                    whenComplate(false, 0, 0)
                     return
                 }
 
                 var count:Int = 0
+                var newP:Double = 0
                 newData.forEach { new in
                     let oldIdx:Int? = self.dataset.firstIndex(where: { item in
                         new.openTime == item.openTime
@@ -167,13 +168,14 @@ class LineDataset {
                         self.dataset.append(newData[0])
                         count += 1
                     }
+                    newP = new.close
                 }
                
-                whenComplate(true, count)
+                whenComplate(true, count, newP)
             },
             whenComplate: {res in
                 if res == false {
-                    whenComplate(false, 0)
+                    whenComplate(false, 0, 0)
                 }
             }
         )

@@ -93,8 +93,21 @@ class AccountGeneralModelData: ObservableObject{
         contractUnit = .USDT
         
         accountSpot = []
+        accountSpot.append(AccountSpotItem(baseAsset: "USDT", quoteAsset: "USDT", count: 10))
+        accountSpot.append(AccountSpotItem(baseAsset: "BTC", quoteAsset: "USDT", count: 20))
     }
     
+    /**
+     获取币种数量
+     */
+    func coinCount(base: String) -> Double {
+        if let spot = accountSpot.first(where: { item in
+            item.baseAsset == base
+        }) {
+            return spot.count
+        }
+        return 0
+    }
 }
 
 @Observable
@@ -198,8 +211,6 @@ class AccountSpotItem: Identifiable, Equatable{
      */
     var lastAssetValue: Double
     
-    
-
     
     init(baseAsset: String,
          quoteAsset: String,

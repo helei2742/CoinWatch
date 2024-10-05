@@ -147,13 +147,19 @@ struct KLineChart: View {
     }
     
     @Binding var klineInterval: KLineInterval
+    
+    /**
+     回调，监听刷新k线
+     */
+    private var whenRefiresh:  ((Double) -> Void)? = nil
         
     init(
         symbol: String,
         kLineInterval: Binding<KLineInterval>,
         maIntervals: [MATypeItem],
         bollConfig:(average:Int, n:Int)? = (average: 21, n: 2),
-        getPrintState: @escaping () -> ChartPrintState
+        getPrintState: @escaping () -> ChartPrintState,
+        whenRefiresh:((Double) -> Void)? = nil
     ) {
         self._klineInterval = kLineInterval
         
@@ -170,6 +176,8 @@ struct KLineChart: View {
         self.getPrintState = getPrintState
         
         self.bollConfig = bollConfig ?? (average: 21, n: 2)
+        
+        self.whenRefiresh = whenRefiresh
     }
     
     var body: some View {
@@ -249,6 +257,9 @@ struct KLineChart: View {
                 loadLineDataNetwork(beforeSuccessComplate: {
                     scrollToLast()
                 })
+            }
+            .onChange(of: geometry.size.width){ _, new in
+                windowWidth = new
             }
             .alert(isPresented: $isShowAlert) {
                     Alert(
@@ -731,12 +742,14 @@ struct KLineChart: View {
         }
     }
     
+    
+
     /**
      开始刷新k线数据
      */
     func startRefreshLineData() {
         //开始刷k线数据
-        dataset.startRefresh { (res, count) in
+        dataset.startRefresh { (res, count, newPrice) in
             if !res {
                 stopRefreshLineData()
                 isShowAlert = true
@@ -750,6 +763,8 @@ struct KLineChart: View {
                     //算boll
                     dataset.calculateBoll(maInterval: 21, n:2)
                 }
+                
+                whenRefiresh?(newPrice)
             }
         }
     }

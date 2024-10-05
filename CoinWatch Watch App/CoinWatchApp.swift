@@ -23,8 +23,8 @@ struct CoinWatch_Watch_AppApp: App {
 //                }
 //            )
             
-            CoinDetailPage(base: "BNB", quote: "USDT")
-//            MainView()
+//            CoinDetailPage(base: "BNB", quote: "USDT")
+            MainView()
         }
     }
 }

@@ -24,6 +24,11 @@ struct CoinDetailWindow: View {
     @State var isFullScreen: Bool = false
     
     /**
+     展示购买卖出界面
+     */
+    @State var showBuySale: Bool = false
+    
+    /**
      是否在加载深度信息
      */
     @State var isLoadingDeep: Bool = false
@@ -38,6 +43,10 @@ struct CoinDetailWindow: View {
      */
     @State var selectDids: Double? = nil
     
+    /**
+     最新价格
+     */
+    @State var newPrice: Double = 0.0
     
     /**
      k线图表显示的类型
@@ -49,6 +58,7 @@ struct CoinDetailWindow: View {
      */
     @State var kLineInterval: KLineInterval = .d_1
     
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -56,20 +66,28 @@ struct CoinDetailWindow: View {
                 VStack(spacing:0) {
                     HStack(spacing:0){
                         //左边区域
-                        deepGraph
-                                                
-                        //中间k线图
-                        KLineChart(
-                            symbol: CommonUtil.generalCoinSymbol(
-                                base: coinInfo.base,quote: coinInfo.quote
-                            ),
-                            kLineInterval: $kLineInterval,
-                            maIntervals: [MAType.ma_15, MAType.ma_20],
-                            getPrintState: {
-                                chartPrintState
-                            }
-                        )
-                        .frame(width: geometry.size.width*0.7)
+                        if !isFullScreen {
+                            deepGraph
+                        }
+                        
+                                      
+                        ZStack{
+                            //中间k线图
+                            KLineChart(
+                                symbol: CommonUtil.generalCoinSymbol(
+                                    base: coinInfo.base,quote: coinInfo.quote
+                                ),
+                                kLineInterval: $kLineInterval,
+                                maIntervals: [MAType.ma_15, MAType.ma_20],
+                                getPrintState: {
+                                    chartPrintState
+                                },
+                                whenRefiresh: { newPrice in
+                                    self.newPrice = newPrice
+                                }
+                            )
+                        }
+                        .frame(width: isFullScreen ? geometry.size.width : geometry.size.width*0.7)
                     }
                 }
                 .font(.defaultFont())
@@ -78,7 +96,8 @@ struct CoinDetailWindow: View {
                 )
                 .toolbar{
                     ToolbarItem(placement: .topBarLeading) {
-                        KLineIntervalPicker(kLineInterval: $kLineInterval)
+                        BackButton(width: 30)
+                        
                     }
                     ToolbarItem(placement: .topBarTrailing) {
 //                        topToolbar
@@ -89,7 +108,7 @@ struct CoinDetailWindow: View {
                     }
                     
                     ToolbarItem(placement: .bottomBar) {
-                        fullScreenButton
+                        buttomBar
                     }
                 }
                 .onAppear{
@@ -142,44 +161,79 @@ struct CoinDetailWindow: View {
         .padding(.trailing, 1)
     }
     
-    
     @ViewBuilder
-    var fullScreenButton: some View {
-        Button {
-            withAnimation {
-                isFullScreen.toggle()
-            }
-        } label: {
-            Image("fullscreen")
-                .renderingMode(.original)
-                .resizable()
-                .foregroundStyle(Color("SystemFontColor"))
-                .background(Color("MetricIconBGColor"))
-                .frame(width: 20, height: 20)
-                .scaledToFit()
-        }
-        .buttonStyle(SelectButtonStyle())
-        .background(Color("MetricIconBGColor"))
-        .frame(width: 20, height: 20)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 0)
-        )
-        // 设置动画参数
-        .sheet(isPresented: $isFullScreen) {
-            KLineChart(
-                symbol: CommonUtil.generalCoinSymbol(
-                    base: coinInfo.base,quote: coinInfo.quote
-                ),
-                kLineInterval: $kLineInterval,
-                maIntervals: [MAType.ma_15, MAType.ma_20],
-                getPrintState: {
-                    chartPrintState
+    var buttomBar: some View {
+        HStack {
+            //全屏
+            Button {
+                withAnimation {
+                    isFullScreen.toggle()
                 }
+            } label: {
+                Image("fullscreen")
+                    .renderingMode(.original)
+                    .resizable()
+                    .foregroundStyle(Color("SystemFontColor"))
+                    .frame(width: 30, height: 30)
+                    .scaledToFit()
+            }
+            .buttonStyle(SelectButtonStyle())
+            .frame(width: 30, height: 30)
+            .clipShape(
+                Circle()
             )
+            .background(Color("MetricIconBGColor"))
+//            .sheet(isPresented: $isFullScreen) {
+//                KLineChart(
+//                    symbol: CommonUtil.generalCoinSymbol(
+//                        base: coinInfo.base,quote: coinInfo.quote
+//                    ),
+//                    kLineInterval: $kLineInterval,
+//                    maIntervals: [MAType.ma_15, MAType.ma_20],
+//                    getPrintState: {
+//                        chartPrintState
+//                    }
+//                )
+//            }
+            
+            Spacer()
+            
+            KLineIntervalPicker(kLineInterval: $kLineInterval)
+            
+            
+            Spacer()
+            
+            //买卖
+            Button {
+                withAnimation {
+                    showBuySale = true
+                }
+            } label: {
+                Image("trade")
+                    .renderingMode(.original)
+                    .resizable()
+                    .foregroundStyle(Color(".orange"))
+                    .frame(width: 30, height: 30)
+                    .scaledToFit()
+            }
+            .padding(0)
+            .buttonStyle(SelectButtonStyle())
+            .background(Color("MetricIconBGColor"))
+            .frame(width: 30, height: 30)
+            .clipShape(
+                Circle()
+            )
+            .sheet(isPresented: $showBuySale) {
+                TradeView(
+                    base: coinInfo.base,
+                    quote: coinInfo.quote,
+                    price: newPrice
+                )
+            }
         }
     }
     
-    
+
     func printDeepInfo(selectedData: DeepInfoPoint?) -> Bool {
         if let selectedData {
             natificationBar.printContent(content: ["price: \(selectedData.price.coinPriceFormat())", "volume: \(selectedData.volume)"])
